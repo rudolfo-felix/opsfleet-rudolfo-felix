@@ -25,9 +25,9 @@ Here are the direct links to all the original materials, canvases, and environme
   `bigquery-public-data.thelook_ecommerce`  
   *(Public tables: `orders`, `order_items`, `products`, `users`)*
 * 🤖 **LLM Provider API Portal:**  
-  [Google AI Studio](https://aistudio.google.com/) *(Free tier for `gemini-1.5-flash` / `gemini-1.5-pro`)*
+  [Google AI Studio](https://aistudio.google.com/) *(Free tier for `gemini-2.5-flash` / `gemini-2.5-flash-lite`)*
 * 📚 **Core Architectural Reference (Whitepaper in Repo):**  
-  [The Agentic Operating Model (LangChain Enterprise Whitepaper)](The%20Agentic%20Operating%20Model.pdf)  
+  [The Agentic Operating Model (LangChain Enterprise Whitepaper)](assets/The%20Agentic%20Operating%20Model.pdf)  
   *Key concepts: Agent Development Lifecycle (ADLC), Risk Taxonomy (Tier 2 HITL), LangGraph Runtimes, Context Hubs, and FinOps.*
 * 💼 **Opsfleet Company Overview:**  
   [Opsfleet Website](https://opsfleet.com) | Headquarters: Israel | 60+ Engineers (AI, Data, DevOps)
@@ -297,7 +297,7 @@ stateDiagram-v2
 
 ## 🏛️ 6.1 Architectural Alignment: The Agentic Operating Model (AOM)
 
-Our design directly applies the principles established in LangChain's enterprise whitepaper, *[The Agentic Operating Model](The%20Agentic%20Operating%20Model.pdf)*, mapping Opsfleet's assessment requirements to industry-standard patterns:
+Our design directly applies the principles established in LangChain's enterprise whitepaper, *[The Agentic Operating Model](assets/The%20Agentic%20Operating%20Model.pdf)*, mapping Opsfleet's assessment requirements to industry-standard patterns:
 
 | Opsfleet Requirement | AOM Architectural Concept | Concrete Design / Prototype Implementation |
 |---|---|---|
