@@ -18,6 +18,7 @@ The objective is to design a production-ready **High-Level Design (HLD)** and bu
 
 * 📑 **[Master Execution Plan & Checklist](docs/MASTER_PLAN.md):** Complete operational plan, Slack Q&A alignment with Harry (AI PM) & Vlad (AI Tech Lead), **Architectural Trade-offs Table**, and granular verification checklist.
 * 🏛️ **C4 Architectural Standard:** HLD structured following the **C4 Model (Level 2 Container & Level 3 Component)** mapped to Google Cloud Platform managed services.
+* 🛡️ **Regulatory & Standards Alignment:** Comprehensive mapping of safety, HITL oversight, and risk controls to the **EU AI Act (Article 14)** and **NIST AI RMF (NIST AI 600-1)**.
 * 📄 **[Official Assignment Specification (Markdown)](docs/ASSIGNMENT_SPEC.md):** Markdown version of the retail company challenge.
 * 📄 **[Opsfleet AI Engineer Job Description (Markdown)](docs/JOB_DESCRIPTION.md):** Full role specification and core responsibilities.
 * 📚 **Architectural Foundations & Reference Whitepapers:**
