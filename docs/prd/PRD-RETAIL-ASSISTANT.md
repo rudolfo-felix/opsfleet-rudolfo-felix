@@ -71,10 +71,13 @@ An **Agentic AI Conversational Data Assistant** that empowers non-technical exec
 
 ## ⚙️ 4. Non-Functional Requirements (NFRs)
 
-* **NFR-1 (Usability & The 2-Minute Rule):** Evaluators must be able to clone the repository, supply a `GEMINI_API_KEY`, and run `python main.py` in under 2 minutes.
-* **NFR-2 (FinOps & Rate Limiting):** Capped at 2–5 LLM calls per query. Support clean exponential backoff on HTTP 429 (`RESOURCE_EXHAUSTED`).
+* **NFR-1 (Usability & The 2-Minute Rule):** Evaluators must be able to clone the repository, supply a personal `GEMINI_API_KEY`, and run `python main.py` in under 2 minutes without missing dependencies or setup friction.
+* **NFR-2 (FinOps, Model Configuration & Rate Limiting):** As specified by AI Tech Lead Vlad Bondarenko:
+  - Model must be configurable via `MODEL_NAME` (defaulting to `gemini-2.5-flash`, swappable to `gemini-2.5-flash-lite` or `gemini-3.1-flash`). Retired 1.5 models and paid Pro models are strictly excluded.
+  - LLM call budget per analytical question is guided to **2–5 calls** to protect free-tier quotas.
+  - HTTP 429 (`RESOURCE_EXHAUSTED`) exceptions must be intercepted with exponential backoff and jitter, providing user-visible CLI feedback without crashing.
 * **NFR-3 (Regulatory Alignment):** Designed in alignment with **EU AI Act (Article 14 - Human Oversight)** and **NIST AI RMF (GOVERN, MAP, MEASURE, MANAGE)**.
-* **NFR-4 (Portability):** Zero proprietary vendor lock-in. 100% runnable using free-tier / open-source dependencies.
+* **NFR-4 (Portability & Free-Tier First):** Zero proprietary vendor lock-in. 100% runnable at $0.00 cost on Google AI Studio Free Tier and open-source packages.
 
 ---
 

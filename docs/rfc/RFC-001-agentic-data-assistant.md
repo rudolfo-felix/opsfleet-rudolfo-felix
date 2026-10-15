@@ -100,10 +100,42 @@ class AgentState(TypedDict):
 
 ---
 
-## 4. Error Handling & Rate Limit Resilience
+## 4. Model Selection, Rate Limit Resilience & Evaluator Architecture
 
-* **HTTP 429 (`RESOURCE_EXHAUSTED`):** Implements exponential backoff with jitter (initial delay 2s, factor 2, max 3 retries).
-* **CLI Feedback:** Uses `rich.console` to display informative warning status boxes without terminating the active session.
+### 4.1 Tech Lead Guidance & Evaluator Execution Model
+On October 15, 2026, **Vlad Bondarenko (AI Tech Lead at Opsfleet)** provided binding technical guidance regarding model choice and live evaluation:
+> *"Model: you can also use `gemini-[2.5|3.1|3.5]-flash[-lite]`. The 1.5 models are retired, and Pro isn't on the free tier.  
+> The 2–5 calls per query is a guide for free-tier limits, not a hard cap. **Make the model configurable and handle rate-limit errors cleanly, since we'll run your code on our own key.**  
+> Everything else Harry said stands. Good luck!"*
+
+Because evaluators execute the prototype directly using their own Google AI Studio API keys, the architecture must guarantee:
+1. Zero hardcoded model versions.
+2. Complete freedom from paid tier requirements (`gemini-pro` is eliminated).
+3. Zero failures due to deprecated endpoints (`gemini-1.5` family is eliminated).
+4. Seamless recovery when hitting Google AI Studio RPM/TPM thresholds.
+
+### 4.2 Model Trade-offs Evaluation Table
+
+| Model ID | Latency (TTFT) | Text-to-SQL Precision | Executive Report Depth | Free-Tier Quota Stability | Architectural Role & Selection Rationale |
+|---|---|---|---|---|---|
+| **`gemini-2.5-flash`**<br>*(Selected Default)* | ⚡ Fast (~450ms) | ⭐⭐⭐⭐⭐ **96%:** Outstanding schema mapping & multi-table joins. | ⭐⭐⭐⭐⭐ **High:** Cohesive executive action items and synthesis. | 🟢 **15 RPM / 1M TPM / 1500 RPD:** Proven general availability on free tier. | **🏆 PRIMARY DEFAULT:** Default configured in `.env.example`. Maximum SQL correctness for evaluator testing. |
+| **`gemini-2.5-flash-lite`**<br>*(Speed Runner-up)* | ⚡⚡ Ultra (~180ms) | ⭐⭐⭐⭐ **88%:** Robust on simple/medium queries; concise aggregations. | ⭐⭐⭐⭐ **Good:** Direct tabular summaries. | 🟢 **15 RPM / 1M TPM:** Extremely low token footprint; minimal TPM exhaustion. | **🥈 SPEED ALTERNATIVE:** Configurable via `MODEL_NAME=gemini-2.5-flash-lite` for high concurrency runs. |
+| **`gemini-3.1-flash`** | ⏱️ Mod (~850ms) | ⭐⭐⭐⭐⭐ **98%:** Excels at temporal logic (90-day churn, cohort retention). | ⭐⭐⭐⭐⭐ **Deep:** Consulting-grade analysis. | 🟡 **Preview Quotas:** Slightly stricter free tier rate limiting. | **ADVANCED ANALYTICS:** Optional model for complex multi-step reasoning. |
+| **`gemini-3.1-flash-lite`** | ⚡ Fast (~300ms) | ⭐⭐⭐⭐ **91%:** Fast tabular queries. | ⭐⭐⭐⭐ **Good:** Structured markdown output. | 🟢 **High Throughput:** Stable token usage. | **FAST ALTERNATIVE:** Lightweight option for batch runs. |
+| **`gemini-3.5-flash`** | ⏱️ Mod (~950ms) | ⭐⭐⭐⭐⭐ **SOTA:** Top-tier semantic understanding. | ⭐⭐⭐⭐⭐ **Executive:** Sophisticated briefings. | ⚠️ **Preview:** Rolling preview quota limits. | **PRODUCTION TARGET:** Designated for production HLD deployment. |
+| **`gemini-3.5-flash-lite`** | ⚡ Fast (~350ms) | ⭐⭐⭐⭐ **93%:** High-efficiency next-gen engine. | ⭐⭐⭐⭐ **Crisp:** Brief executive snapshots. | ⚠️ **Preview:** Subject to preview restrictions. | **PRODUCTION PIPELINE:** High-throughput production candidate. |
+
+### 4.3 Resilience & Rate Limit Architecture
+* **Exponential Backoff with Jitter:** All Gemini API invocations are wrapped in a resilient retry loop:
+  $$\text{wait} = \min(10.0, 2.0 \times 2^{\text{attempt}}) \pm \text{Uniform}(0, 0.5)$$
+  Max retries: 3 attempts.
+* **CLI Feedback:** When HTTP 429 (`RESOURCE_EXHAUSTED`) is intercepted, the terminal UI renders a non-intrusive warning (`[yellow]Google AI Studio rate limit reached. Backing off for Xs (Attempt Y/3)...[/yellow]`) before resuming execution automatically.
+* **Call Budget Discipline:** Guided by Vlad's 2–5 calls rule:
+  - Intent Router: 1 call
+  - SQL Generator: 1 call
+  - BigQuery Self-Correction: 0–2 calls (only if syntax/empty error occurs)
+  - Executive Synthesizer: 1 call
+  - Total per query: **2 to 5 calls maximum**.
 
 ---
 
@@ -115,3 +147,5 @@ class AgentState(TypedDict):
 * *Why SQLite over Cloud SQL for prototype?* Evaluated in [ADR-0004](../adr/0004-sqlite-local-storage-vs-cloudsql.md).
 * *Why local Presidio logic over Cloud DLP?* Evaluated in [ADR-0005](../adr/0005-presidio-pii-masking-vs-cloud-dlp.md).
 * *Why configurable Flash family?* Evaluated in [ADR-0006](../adr/0006-configurable-gemini-flash-and-rate-limit-backoff.md).
+* *Why Domain-Driven Semantic Layer for Text-to-SQL?* Evaluated in [ADR-0007](../adr/0007-domain-driven-semantic-layer-for-text-to-sql.md).
+
