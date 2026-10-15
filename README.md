@@ -20,7 +20,8 @@ The objective is to design a production-ready **High-Level Design (HLD)** and bu
 * 🎫 **[Delivery Tickets & Sprints](tickets/README.md):** Granular delivery backlog (OPS-001 to OPS-007) with user stories, acceptance criteria, and PR mapping.
 * 📋 **[Product Requirements Document (PRD)](docs/prd/PRD-RETAIL-ASSISTANT.md):** Business objectives, executive personas, and functional specifications.
 * 📐 **[Technical Specification (RFC-001)](docs/rfc/RFC-001-agentic-data-assistant.md):** Engineering design, LangGraph StateGraph schema, and error-handling pipelines.
-* 🏛️ **[Architecture Decision Records (ADRs)](docs/adr/README.md):** MADR-standard decision logs (ADR 0001 through 0006) capturing trade-offs, consequences, and design choices.
+* 🏛️ **[Retail Domain Ontology & Ubiquitous Language (DDD)](docs/architecture/01_BUSINESS_ONTOLOGY_AND_UBIQUITOUS_LANGUAGE.md):** Canonical entities (`Customer`, `Order`, `Product`), metric calculation rules, and master acronyms glossary eliminating Text-to-SQL semantic ambiguity.
+* 🏛️ **[Architecture Decision Records (ADRs)](docs/adr/README.md):** MADR-standard decision logs (ADR 0001 through 0007) capturing trade-offs, consequences, and design choices.
 * 📑 **[Master Execution Plan & Checklist](docs/MASTER_PLAN.md):** Operational blueprint, verbatim Slack Q&A alignment with Harry (AI PM) & Vlad (AI Tech Lead), and regulatory mapping.
 * 💰 **FinOps & Dependency Strategy:** Explicit **Free/OSS-first evaluation stack** (100% runnable at $0.00 cost) vs. Scalable Enterprise Cloud Trade-offs (Langfuse vs. LangSmith, pgvector vs. Pinecone).
 * 🏛️ **C4 Architectural Standard:** HLD structured across the **C4 Model (Level 1 System Context, Level 2 Container & Level 3 Component)** mapped to Google Cloud Platform managed services.
