@@ -106,13 +106,57 @@ To achieve maximum quality within the 6–12 hour budget and prevent over-engine
 ## 🏗️ 5. High-Level Design (HLD) Blueprint
 
 The High-Level Design (HLD) specifies the macro architecture for a production enterprise deployment.  
-It explicitly adopts the **C4 Model** notation standard:
+It explicitly adopts the **C4 Model** notation standard across three distinct abstraction levels:
+- **C4 Level 1 (System Context Diagram):** The 10,000-foot view defining system boundaries, executive personas, and external enterprise platforms.
 - **C4 Level 2 (Container Diagram):** Visualizing deployable boundaries, microservices, cloud managed services (GCP), and storage backends.
 - **C4 Level 3 (Component Diagram):** Zooming into the container internals of the **LangGraph Agentic Brain**, Security Guards, and Data Access Layers.
 
-> 💡 **Architectural Seniority Note:** In `docs/HLD.md`, framing the architecture under the **C4 Model (Container & Component Level)** mapped to Google Cloud Platform managed services establishes immediate enterprise architectural maturity and rigor.
+> 💡 **Architectural Seniority Note:** In `docs/HLD.md`, presenting the architecture across the **C4 Model (Context, Container, and Component Levels)** mapped to Google Cloud Platform managed services establishes immediate enterprise architectural maturity and rigor.
 
-### System Architecture Diagram (C4 Container & Component Level in Mermaid)
+### 5.1 C4 Level 1: System Context Diagram (The Macro View)
+
+This diagram establishes the scope boundary of the **Retail Data Analysis AI Assistant** as a black-box system, identifying the primary business actors and external enterprise integrations:
+
+```mermaid
+flowchart TB
+    subgraph Users["Atores & Personas Empresariais"]
+        Exec["👔 Retail Executive\n(C-Level / Category Manager)\nDecision making, margins, inventory"]
+        Analyst["📊 Data Analyst\nComplex ad-hoc queries, validation"]
+        Admin["🛠️ System Administrator\nAuditing, data retention, prompt policies"]
+    end
+
+    System["🤖 Retail Data Analysis AI Assistant\n[Central System / Opsfleet Solution]\nAllows non-technical executives to query ecommerce data\nin natural language with PII masking, guardrails, and HITL."]
+
+    subgraph External_Systems["Enterprise External Platforms & Services"]
+        GCP_BQ[("☁️ Google Cloud BigQuery\n(Dataset: thelook_ecommerce)\nRead-only transactional & analytics store")]
+        GeminiAPI["🧠 Google AI Studio / Vertex AI\n(Gemini 1.5 Flash / Pro LLM)\nSemantic parsing, SQL generation, synthesis"]
+        IdP["🔐 Enterprise Identity Provider (IdP)\n(Okta / Azure AD / Keycloak)\nSSO Authentication, RFC 9068 JWT brand scopes"]
+        DataLake[("📦 Enterprise Data Lake (GCS)\nGolden Knowledge Bucket of Trios\n(Question → SQL → Report)")]
+        ObsPlatform["📈 Enterprise Observability\n(OpenTelemetry / Langfuse / Datadog)\nCost, latency, accuracy, and trace tracking"]
+    end
+
+    Exec -->|"Natural language business queries & reports"| System
+    Analyst -->|"Metric validation & query optimization"| System
+    Admin -->|"Persona tone management & report lifecycle"| System
+
+    System <==>|"Executes SQL queries against orders, products, users"| GCP_BQ
+    System <==>|"Sends prompts & receives structured completions"| GeminiAPI
+    System <==>|"Validates JWT signatures & user brand scopes"| IdP
+    System <==>|"Ingests historical trios for few-shot context"| DataLake
+    System -.->|"Emits OTel GenAI traces, metrics, and logs"| ObsPlatform
+
+    classDef actor fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
+    classDef system fill:#d1c4e9,stroke:#512da8,stroke-width:3px;
+    classDef external fill:#f5f5f5,stroke:#616161,stroke-width:2px;
+
+    class Exec,Analyst,Admin actor;
+    class System system;
+    class GCP_BQ,GeminiAPI,IdP,DataLake,ObsPlatform external;
+```
+
+---
+
+### 5.2 C4 Level 2 (Container) & Level 3 (Component) Architecture Diagram
 
 ```mermaid
 flowchart TB
@@ -319,6 +363,26 @@ We integrate direct mapping to the **EU AI Act** and the **NIST AI Risk Manageme
 | **NIST AI RMF (MAP Function)** | **Requirement 2 & 5:** Threat Modeling & Risk Mapping | Maps generative AI threat vectors: SQL injection, prompt injection, hallucinations on invalid table joins, and context leakage, establishing preventative guardrails at each node. |
 | **NIST AI RMF (MEASURE Function)** | **Requirement 6 & 7:** QA Evals & Observability | Systematic tracking of trajectory fidelity, tool-calling accuracy, hallucination drift, and token consumption using Golden Datasets and OpenTelemetry-compatible tracing. |
 | **NIST AI RMF (MANAGE Function)** | **Requirement 5:** Resilience & Error Handling | Operational risk management via stateful self-correction loops (capping retries at $\le 2$ to protect FinOps budgets) and graceful degraded-state fallbacks during BigQuery or API outages. |
+
+---
+
+## 🌐 6.5 Deep-Dive Industry Protocols, Standards & Benchmarks Matrix
+
+To ensure the architecture aligns with 2025/2026 enterprise AI engineering best practices, we integrate key open protocols, data security hierarchies, and evaluation benchmarks mapped directly across the **8 Production Requirements**:
+
+### Master Requirements Mapping:
+
+| # | Opsfleet Requirement | Industry Standard / Open Protocol | Architectural Implementation & Impact |
+|---|---|---|---|
+| **1** | **Hybrid Intelligence (Golden Bucket RAG)** | **MCP (Model Context Protocol)**<br>`text-embedding-004` (Google Vertex) | Golden Bucket historical trios (*Question $\rightarrow$ SQL $\rightarrow$ Report*) are exposed as standardized MCP resources (`golden-trios://retail/queries`). Vector similarity search combines dense embeddings with schema metadata filtering. |
+| **2** | **Safety, PII Masking & User Scoping** | **BigQuery RLS + Dynamic Data Masking (DDM)**<br>**RFC 9068 (JWT Profile for OAuth 2.0)** | **Evaluation Hierarchy:** BigQuery evaluates **Row-Level Security (RLS)** first (filtering rows by `allowed_brands` from the RFC 9068 JWT), then applies **Dynamic Data Masking (DDM)** to obscure `email`/`first_name`. In the prototype, Microsoft Presidio regex logic provides defense-in-depth sanitization. |
+| **3** | **High-Stakes Oversight (Destructive Ops)** | **EU AI Act (Article 14 - HITL)**<br>**LangGraph Checkpointer Interrupt** | Strict human-in-the-loop requirement. LangGraph executes an `interrupt()` entering state `PAUSED_FOR_CONFIRMATION`. Destructive actions (`DELETE FROM reports`) are cryptographically prevented from executing without explicit human confirmation. |
+| **4** | **Continuous Improvement (Learning Loop)** | **Active Learning Pipeline**<br>**Semantic Preference Store** | Queries that successfully self-correct are flagged into a Data Steward curation queue for promotion into the Golden Knowledge Lake. User-level format preferences (tables vs bullets) are persisted in a key-value store. |
+| **5** | **Resilience & Self-Correction** | **Reflexion / Self-Debug Loop**<br>**Apache Arrow Flight SQL (BQ Storage API)** | BigQuery compiler errors are reinjected into the LangGraph state machine as structured feedback (capped at $\le 2$ retries to protect FinOps budgets). High-throughput tabular queries stream zero-copy data via Arrow Flight gRPC. |
+| **6** | **Quality Assurance Strategy** | **BIRD-SQL & Spider 2.0 Benchmarks**<br>**LLM-as-a-Judge (DeepEval / Ragas)** | Text-to-SQL quality is evaluated using **Execution Accuracy (EX)** (verifying DataFrame equivalence rather than string matching) and **Valid Efficiency Score (VES)** (penalizing redundant full-table scans). Executive reports are scored on Faithfulness and Answer Relevance. |
+| **7** | **Observability & Production Readiness** | **OpenTelemetry GenAI Semantic Conventions**<br>**SSE (Server-Sent Events - RFC 8895)** | Telemetry adheres to CNCF `gen_ai.*` namespaces (`gen_ai.usage.input_tokens`, `gen_ai.client.operation.duration`). Strictly isolates span metrics from sensitive prompt/response payloads to prevent PII leakage to APMs. SSE streams progress states to the client. |
+| **8** | **Agility (Persona Management)** | **LLM CMS / Prompt Registry**<br>*(Langfuse / LangSmith Hub Pattern)* | Prompts and executive personas are externalized from application source code. Non-technical leadership updates report tone via a web UI; the runtime pulls tagged prompts (`persona:production`) with client-side in-memory caching (zero latency, offline resilience). |
+| **+** | **Future Agentic Commerce Extension** | **Universal Commerce Protocol (UCP)**<br>**AP2 (Agent Payments Protocol) & A2A** | Roadmap readiness for autonomous retail operations: when the assistant evolves from read-only data analysis to agentic inventory re-ordering, it interfaces via UCP manifests (`/.well-known/ucp`) and AP2 spending limit bounds. |
 
 ---
 
