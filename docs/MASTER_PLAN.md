@@ -300,6 +300,28 @@ A senior evaluator like Vlad will clone the repository, run `pip install -r requ
 
 ---
 
+## 🛡️ 6.4 Regulatory & Compliance Standards Alignment: EU AI Act & NIST AI RMF
+
+In enterprise client engagements, professional services firms like Opsfleet are evaluated on whether their agentic architectures comply with global AI safety, governance, and data protection standards.  
+We integrate direct mapping to the **EU AI Act** and the **NIST AI Risk Management Framework (NIST AI RMF 1.0 / NIST AI 600-1)**.
+
+### Scope Distinction (Engineering vs. Architecture):
+* **In the Working Prototype (Code):** **Zero Over-Engineering.** We strictly implement practical software controls: deterministic regex/NLP PII redaction and an interactive CLI confirmation prompt (`Are you sure? [y/N]`).
+* **In the HLD (`docs/HLD.md`) & Tech Interview:** **Major Enterprise Differentiator.** Demonstrating how each design choice satisfies formal compliance requirements elevates the solution from an ad-hoc script to an enterprise-grade consulting blueprint.
+
+### Standards Mapping Matrix:
+
+| Standard & Article | Opsfleet Assessment Requirement | Architectural Enforcement & Rationale |
+|---|---|---|
+| **EU AI Act — Article 14 (Human Oversight)** | **Requirement 3:** High-Stakes Oversight (Destructive Ops) | The mandate for **Human-In-The-Loop (HITL)** oversight for consequential operations. The agent is architecturally blocked from executing deletions on the `Saved Reports` library without explicit, verifiable human confirmation via LangGraph interrupts. |
+| **EU AI Act & GDPR (Data Minimization & Confidentiality)** | **Requirement 2:** Safety & PII Masking | Enforces strict data minimization by intercepting BigQuery queries and responses at the LLM Gateway. Customer identifiers (`first_name`, `last_name`, `email`, `ip_address` from `thelook_ecommerce.users`) are scrubbed before reaching the model or the executive screen. |
+| **NIST AI RMF (GOVERN Function)** | **Requirement 8:** Agility (Persona Management) & Context | Governance policies and persona tone are externalized into a versioned Context Hub / Prompt Registry, establishing clear operational boundaries that business leaders can govern without code redeployments. |
+| **NIST AI RMF (MAP Function)** | **Requirement 2 & 5:** Threat Modeling & Risk Mapping | Maps generative AI threat vectors: SQL injection, prompt injection, hallucinations on invalid table joins, and context leakage, establishing preventative guardrails at each node. |
+| **NIST AI RMF (MEASURE Function)** | **Requirement 6 & 7:** QA Evals & Observability | Systematic tracking of trajectory fidelity, tool-calling accuracy, hallucination drift, and token consumption using Golden Datasets and OpenTelemetry-compatible tracing. |
+| **NIST AI RMF (MANAGE Function)** | **Requirement 5:** Resilience & Error Handling | Operational risk management via stateful self-correction loops (capping retries at $\le 2$ to protect FinOps budgets) and graceful degraded-state fallbacks during BigQuery or API outages. |
+
+---
+
 ## 📅 7. Step-by-Step Implementation Roadmap (6–12 Hours)
 
 | Phase | Milestone | Estimated Time | Key Deliverables |
