@@ -79,7 +79,23 @@ Before writing code, we performed a proactive alignment in the official Opsfleet
 | **1** | **User Context & Scoping (CLI Prototype)** | *For PII masking and product scoping ("users can only analyze products related to them"), is it acceptable to simulate the active user via a CLI flag or initial session prompt (e.g., `--user-id 123` or mock executive selector)?* | **Approved.** *"Yes, simulating the active user via a CLI flag or initial session prompt is perfectly fine for the prototype. In a production setup the agent would receive a JWT with the user's brand scopes from the frontend — just describe that flow in the HLD."* |
 | **2** | **Golden Knowledge Bucket** | *The spec notes the Golden Bucket is theoretical. Can we fully specify its ingestion, embedding, and retrieval loop in the HLD, while keeping the prototype on dynamic BigQuery schema exploration (optionally seeded with 2–3 mock trios)?* | **Approved.** *"Your plan is well-aligned. The bucket is a design requirement — fully specifying ingestion, embedding, and retrieval in the HLD is the expectation. Seeding the prototype with 2–3 local mock few-shots is a nice touch and welcome, but not required."* |
 | **3** | **Saved Reports Persistence** | *For destructive ops & confirmation flows ("Delete reports mentioning X"), is a lightweight local storage (SQLite or JSON) sufficient for the prototype?* | **Approved.** *"Yes, a local SQLite file or in-memory/JSON store is completely sufficient for the prototype. Cover the intended production persistence approach in your technical explanation."* |
-| **4** | **Tooling, Framework & Rate Limits** | *Planning to use Google AI Studio (gemini-1.5-flash / pro) with LangGraph and GCP ADC for BigQuery. Any constraints?* | **Approved with Critical Tip.** *"LangGraph is a fine choice... Gemini (via Google AI Studio) is the preferred model provider, and gemini-1.5-flash / pro fits well. **Keep LLM calls per query low (roughly 2–5) to stay within free-tier rate limits.**"* |
+| **4** | **Tooling, Framework & Rate Limits** | *Planning to use Google AI Studio (gemini-1.5-flash / pro) with LangGraph and GCP ADC for BigQuery. Any constraints?* | **Approved with Critical Tip.** *"LangGraph is a fine choice... Gemini (via Google AI Studio) is the preferred model provider... **Keep LLM calls per query low (roughly 2–5) to stay within free-tier rate limits.**"* |
+
+### 🎯 Vlad Bondarenko (AI Tech Lead) Technical Guidance & Additions:
+Following Harry's alignment, **Vlad Bondarenko** (AI Tech Lead at Opsfleet) provided critical technical additions regarding model selection and live evaluation:
+
+> **Vlad Bondarenko [8h34]:**  
+> *"Hi Rudolfo, thank you, hope you are doing well.  
+> Great questions, a couple of additions to Harry's answers:  
+> **Model:** you can also use `gemini-[2.5|3.1|3.5]-flash[-lite]`. The 1.5 models are retired, and Pro isn't on the free tier.  
+> The 2–5 calls per query is a guide for free-tier limits, not a hard cap. **Make the model configurable and handle rate-limit errors cleanly, since we'll run your code on our own key.**  
+> Everything else Harry said stands. Good luck!"*
+
+#### Core Engineering Nuances from Vlad's Input:
+1. **Model Selection & 1.5 Retirement:** `gemini-1.5-flash` and `gemini-1.5-pro` are deprecated/retired. We configure modern supported Flash tiers: default to `gemini-2.5-flash` (or `gemini-2.5-flash-lite`).
+2. **Pro Model Restricted on Free Tier:** Do NOT default to `gemini-pro`, as it is excluded from Google AI Studio's free tier.
+3. **Clean Rate-Limit Handling (HTTP 429):** The 2–5 calls per query is an optimization guideline, but the prototype must implement robust exponential backoff with jitter and clear CLI status feedback (`[yellow]Rate limit reached. Retrying in Xs...[/yellow]`) on `RESOURCE_EXHAUSTED` errors.
+4. **"We'll run your code on our own key":** The evaluation is live. Evaluators will clone the repository, set their own `GEMINI_API_KEY` in `.env`, and execute `python main.py`. Zero-setup configuration is essential.
 
 ---
 
@@ -384,6 +400,46 @@ To ensure the architecture aligns with 2025/2026 enterprise AI engineering best 
 | **7** | **Observability & Production Readiness** | **OpenTelemetry GenAI Semantic Conventions**<br>**SSE (Server-Sent Events - RFC 8895)** | Telemetry adheres to CNCF `gen_ai.*` namespaces (`gen_ai.usage.input_tokens`, `gen_ai.client.operation.duration`). Strictly isolates span metrics from sensitive prompt/response payloads to prevent PII leakage to APMs. SSE streams progress states to the client. |
 | **8** | **Agility (Persona Management)** | **LLM CMS / Prompt Registry**<br>*(Langfuse / LangSmith Hub Pattern)* | Prompts and executive personas are externalized from application source code. Non-technical leadership updates report tone via a web UI; the runtime pulls tagged prompts (`persona:production`) with client-side in-memory caching (zero latency, offline resilience). |
 | **+** | **Future Agentic Commerce Extension** | **Universal Commerce Protocol (UCP)**<br>**AP2 (Agent Payments Protocol) & A2A** | Roadmap readiness for autonomous retail operations: when the assistant evolves from read-only data analysis to agentic inventory re-ordering, it interfaces via UCP manifests (`/.well-known/ucp`) and AP2 spending limit bounds. |
+
+---
+
+## 💰 6.6 Free & Open-Source vs. Paid Commercial Dependencies & FinOps Trade-offs
+
+A core criterion in enterprise technical assessments is demonstrating rigorous **FinOps discipline**—understanding the total cost of ownership (TCO), software licensing models, and avoiding premature commercial vendor lock-in.
+
+### 1. The Architectural Strategy: Zero-Cost Assessment Prototype vs. Scalable Production HLD
+* **In the Working Prototype:** **100% Free-Tier & Open-Source.** The code runs entirely on free-tier services (Google AI Studio `gemini-2.5-flash`, BigQuery 1TB/month free tier, local SQLite, Microsoft Presidio, and open-source LangGraph). Any evaluator can clone the repo and run it at **$0.00 cost** on their own free key.
+* **In the Production HLD:** We articulate explicit, simple trade-offs: when an enterprise should stick with self-hosted open-source tools vs. when scale justifies paying for managed cloud services.
+
+### 2. The Case Study: LangSmith vs. Langfuse (Deconstructing Whitepaper Vendor Bias)
+While LangChain's whitepaper (*The Agentic Operating Model*) promotes their commercial product **LangSmith**, a vendor-neutral enterprise architecture reveals a clear trade-off:
+
+| Evaluation Dimension | **LangSmith (Commercial SaaS)** | **Langfuse (Open-Source / Recommended)** | **Architectural Decision & Rationale** |
+|---|---|---|---|
+| **License Model** | Proprietary / Closed-Source | **100% Open-Source (MIT License)** | Langfuse prevents vendor lock-in; full code transparency. |
+| **Self-Hosting Cost** | Gated behind Enterprise contract (> $10k/yr) | **$0.00 (Docker / Kubernetes Helm)** | Langfuse can be deployed inside the client's GCP VPC at zero software license cost. |
+| **Cloud Free Tier** | 1 user, 5,000 traces/month | **50,000 observations/month (Free)** | 10x higher free tier for early prototyping and staging environments. |
+| **Paid Pricing** | $39/user/month + $2.50–$5.00/1k traces | Pro Cloud ($199/mo) or $0 Self-Hosted | Drastic cost reduction for multi-analyst retail teams. |
+| **Data Privacy & GDPR** | Traces shipped to third-party US cloud | **Zero external data egress** (VPC self-host) | Complies with EU AI Act & GDPR; zero customer retail data leaves client perimeter. |
+| **Prompt Management** | Paid seat-gated Prompt Hub | **Included free in core MIT** | Enables non-technical persona management without additional software licenses. |
+| **Observability Standard** | Proprietary wrappers | **Native OpenTelemetry (OTel)** | Future-proof adherence to CNCF GenAI semantic conventions. |
+
+### 3. Full-Stack Dependency Matrix: Free/OSS vs. Paid Commercial
+
+| Layer / Capability | 🟢 Free / Open-Source / Tier $0 (Prototype) | 🔴 Paid / Commercial / Managed (Enterprise HLD) | Scalability & Production Trade-off Trigger |
+|---|---|---|---|
+| **Orchestration Brain** | **LangGraph Library (MIT, $0)**<br>Runs locally or in Cloud Run containers | **LangGraph Platform / Cloud**<br>(Metered billing in LangSmith Units) | **Trigger:** Stay with LangGraph OSS on Google Cloud Run (scale-to-zero) until orchestration concurrency exceeds 1,000 parallel agents. |
+| **Foundation LLM** | **Google AI Studio (`gemini-2.5-flash`)**<br>15 RPM, 1M TPM, 1,500 RPD free tier | **Google Cloud Vertex AI**<br>Pay-per-token (~$0.075 / 1M input tokens) | **Trigger:** Move to Vertex AI in production to enforce zero data logging, SOC 2 / HIPAA compliance, and SLA uptime guarantees. |
+| **Data Warehouse** | **BigQuery Free Sandbox**<br>1 TB/month queries free, 10 GB storage | **BigQuery On-Demand / Editions**<br>$6.25 / TB scanned or slot-hour commitments | **Trigger:** Free tier covers all prototype evaluations. Production uses BigQuery partitioned tables and dynamic data masking. |
+| **Observability & Tracing**| **Langfuse OSS (MIT)** or local logger<br>Zero licensing fees, native OTel | **LangSmith / Datadog APM**<br>Host-based or trace-based commercial billing | **Trigger:** Self-host Langfuse on Cloud Run + Postgres; migrate to managed SaaS only if infrastructure maintenance overhead exceeds SaaS cost. |
+| **Prompt Registry (CMS)** | **Langfuse Prompts (MIT) / Git Configs**<br>In-memory cached, versioned | **Humanloop / Agenta / LangSmith Hub**<br>Enterprise SaaS contracts | **Trigger:** Langfuse Prompts provides all required no-code persona updates with client-side caching at zero cost. |
+| **Vector Store (Golden Bucket)**| **pgvector (PostgreSQL extension, $0)**<br>ChromaDB (local SQLite vector, $0) | **Vertex AI Vector Search / Pinecone**<br>High fixed cost ($150–$300/mo minimums) | **Trigger:** Use pgvector inside existing Cloud SQL until the Golden Bucket exceeds 5,000,000 embeddings, avoiding costly dedicated vector clusters. |
+| **PII & Data Masking** | **Microsoft Presidio (MIT, $0)**<br>Local regex + NER, zero cloud calls | **Google Cloud Sensitive Data Protection**<br>(Cloud DLP: $1.00–$3.00 / GB inspected) | **Trigger:** Presidio handles 99% of structured PII masking at zero runtime cost. Adopt Cloud DLP only for enterprise unmanaged blob storage scans. |
+| **Quality Assurance (Evals)**| **DeepEval OSS / Ragas OSS (Apache 2.0)**<br>Runs locally via pytest / CLI | **Confident AI / Braintrust Cloud**<br>Cloud-hosted dashboard subscriptions | **Trigger:** Run DeepEval locally and in CI/CD pipelines ($0); adopt cloud dashboards only when non-technical QA teams require shared web views. |
+
+### 4. Enterprise FinOps TCO Summary (Total Cost of Ownership):
+* **Classic Commercial SaaS Stack (LangSmith + Pinecone + Cloud DLP + Braintrust):** **~$800 – $3,000 / month** in pure software subscription overhead.
+* **Our Optimized Open-Source + GCP Native Stack (LangGraph OSS + Langfuse Self-Hosted + pgvector + Presidio):** **~$50 – $120 / month** in underlying GCP compute/storage (*> 85% cost reduction*).
 
 ---
 
