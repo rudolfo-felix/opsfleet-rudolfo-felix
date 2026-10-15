@@ -16,7 +16,8 @@ Provide robust natural language to BigQuery data analysis, capable of recovering
 4. Total LLM calls per query remain within 2–5 to protect Google AI Studio rate limits.
 
 ### Implementation & Architecture
-* 📄 **Related ADR:** [ADR-0001](../docs/adr/0001-adopt-langgraph-state-machine.md)
+* 📄 **Related ADRs:** [ADR-0001](../docs/adr/0001-adopt-langgraph-state-machine.md) & [ADR-0007](../docs/adr/0007-domain-driven-semantic-layer-for-text-to-sql.md)
+* 🏛️ **Domain Ontology:** [ONT-001 (Ubiquitous Language)](../docs/architecture/01_BUSINESS_ONTOLOGY_AND_UBIQUITOUS_LANGUAGE.md)
 * 📄 **Technical Spec:** [RFC-001](../docs/rfc/RFC-001-agentic-data-assistant.md)
 
 ### Completion Criteria

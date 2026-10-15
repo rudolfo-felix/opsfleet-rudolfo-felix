@@ -18,6 +18,7 @@ This documentation suite follows enterprise architecture standards (C4 Model, MA
 
 3. Engineering Design & Proposed Solution:
    └── docs/rfc/RFC-001-agentic-data-assistant.md ──> Technical Specification & StateGraph Design
+   └── docs/architecture/01_BUSINESS_ONTOLOGY_AND_UBIQUITOUS_LANGUAGE.md ──> Retail DDD & Master Acronyms
 
 4. Immutable Architecture Decisions (ADRs):
    └── docs/adr/README.md                   ──> ADR Index Table
@@ -26,7 +27,8 @@ This documentation suite follows enterprise architecture standards (C4 Model, MA
        ├── 0003-bigquery-dynamic-schema-with-mock-fallback.md
        ├── 0004-sqlite-local-storage-vs-cloudsql.md
        ├── 0005-presidio-pii-masking-vs-cloud-dlp.md
-       └── 0006-configurable-gemini-flash-and-rate-limit-backoff.md
+       ├── 0006-configurable-gemini-flash-and-rate-limit-backoff.md
+       └── 0007-domain-driven-semantic-layer-for-text-to-sql.md
 
 5. Enterprise High-Level Design (Production Blueprint):
    └── docs/HLD.md                          ──> C4 Model (L1 Context, L2 Container, L3 Component)
@@ -43,6 +45,7 @@ This documentation suite follows enterprise architecture standards (C4 Model, MA
 |---|---|---|
 | **[`prd/`](./prd/PRD-RETAIL-ASSISTANT.md)** | Product Requirements Document outlining executive personas, business problem, and functional requirements. | Product Managers, C-Level, Evaluators |
 | **[`rfc/`](./rfc/RFC-001-agentic-data-assistant.md)** | Request for Comments (RFC-001) specifying technical implementation, LangGraph state machine, and error handling. | AI Engineers, Software Architects |
+| **[`architecture/`](./architecture/01_BUSINESS_ONTOLOGY_AND_UBIQUITOUS_LANGUAGE.md)** | Domain-Driven Design (DDD) Business Ontology, Ubiquitous Language, and Master Acronyms. | Enterprise Architects, Data Engineers |
 | **[`adr/`](./adr/README.md)** | Architecture Decision Records (MADR standard) documenting irreversible technical choices and trade-offs. | Technical Leads, Staff Architects |
 | **[`MASTER_PLAN.md`](./MASTER_PLAN.md)** | Complete operational master plan, Slack transcripts, regulatory compliance, and FinOps comparison. | Hiring Committee, Project Managers |
 | **[`assets/`](./assets/)** | Original client PDFs, role specifications, and the LangChain enterprise whitepaper. | Archival & Compliance Reference |
