@@ -19,7 +19,9 @@ The objective is to design a production-ready **High-Level Design (HLD)** and bu
 * 📑 **[Master Execution Plan & Checklist](docs/MASTER_PLAN.md):** Complete operational plan, Slack Q&A alignment with Harry (AI PM) & Vlad (AI Tech Lead), and granular verification checklist.
 * 📄 **[Official Assignment Specification (Markdown)](docs/ASSIGNMENT_SPEC.md):** Markdown version of the retail company challenge.
 * 📄 **[Opsfleet AI Engineer Job Description (Markdown)](docs/JOB_DESCRIPTION.md):** Full role specification and core responsibilities.
-* 📦 **Original PDFs:**
+* 📚 **Architectural Foundations & Reference Whitepapers:**
+  * [The Agentic Operating Model (LangChain Whitepaper)](docs/The%20Agentic%20Operating%20Model.pdf) — Enterprise blueprint for the Agent Development Lifecycle (ADLC), LangGraph stateful execution, HITL interrupts, and agentic governance.
+* 📦 **Original Assessment PDFs:**
   * [AI Technical Assignment - Retail Company.pdf](docs/AI%20Technical%20Assignment%20-%20Retail%20Company.pdf)
   * [AI Engineer Opsfleet.pdf](docs/AI%20Engineer%20Opsfleet.pdf)
 

@@ -27,6 +27,9 @@ Here are the direct links to all the original materials, canvases, and environme
   *(Public tables: `orders`, `order_items`, `products`, `users`)*
 * 🤖 **LLM Provider API Portal:**  
   [Google AI Studio](https://aistudio.google.com/) *(Free tier for `gemini-1.5-flash` / `gemini-1.5-pro`)*
+* 📚 **Core Architectural Reference (Whitepaper in Repo):**  
+  [The Agentic Operating Model (LangChain Enterprise Whitepaper)](The%20Agentic%20Operating%20Model.pdf)  
+  *Key concepts: Agent Development Lifecycle (ADLC), Risk Taxonomy (Tier 2 HITL), LangGraph Runtimes, Context Hubs, and FinOps.*
 * 💼 **Opsfleet Company Overview:**  
   [Opsfleet Website](https://opsfleet.com) | Headquarters: Israel | 60+ Engineers (AI, Data, DevOps)
 
@@ -225,6 +228,20 @@ stateDiagram-v2
     
     DisplayOutput --> UserInput
 ```
+
+---
+
+## 🏛️ 6.1 Architectural Alignment: The Agentic Operating Model (AOM)
+
+Our design directly applies the principles established in LangChain's enterprise whitepaper, *[The Agentic Operating Model](The%20Agentic%20Operating%20Model.pdf)*, mapping Opsfleet's assessment requirements to industry-standard patterns:
+
+| Opsfleet Requirement | AOM Architectural Concept | Concrete Design / Prototype Implementation |
+|---|---|---|
+| **High-Stakes Oversight (Destructive Ops)** | **Agentic Risk Taxonomy (Tier 2: Actuating)** | Classified as a consequential action. Implemented using **Human-In-The-Loop (HITL) Checkpoints via LangGraph interrupts (`interrupt()`)** where state execution halts durably until explicit user approval. |
+| **Safety & PII Masking** | **LLM Gateway / Policy Engine** | Centralized input/output enforcement boundary. Redacts customer PII (emails, names, IP addresses) before responses exit the agent boundary. |
+| **Resilience & Self-Correction** | **Durable Graph Runtime & Loops** | Replaces brittle linear chains with a **LangGraph StateGraph**. When BigQuery yields syntax/empty errors, the graph loops back to a self-correction node with a hard retry budget ($\le 2$) to protect FinOps economics. |
+| **Agility / Persona Management (CEO Tone)** | **Context Hub / Prompt as an Artifact** | Decouples prompts and persona definitions from application code into an externalized, environment-tagged repository, enabling non-technical stakeholders to iterate on tone without redeploying code. |
+| **Quality Assurance & Observability** | **Agent Development Lifecycle (ADLC) & Trajectory Evals** | Moves beyond traditional unit tests into **Golden Datasets, Trajectory Testing, and Token Attribution Tracing**, measuring accuracy, latency, and cost-per-correct-interaction. |
 
 ---
 
