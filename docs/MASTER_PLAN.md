@@ -105,9 +105,14 @@ To achieve maximum quality within the 6–12 hour budget and prevent over-engine
 
 ## 🏗️ 5. High-Level Design (HLD) Blueprint
 
-The HLD must be comprehensive, enterprise-ready, and production-grade.
+The High-Level Design (HLD) specifies the macro architecture for a production enterprise deployment.  
+It explicitly adopts the **C4 Model** notation standard:
+- **C4 Level 2 (Container Diagram):** Visualizing deployable boundaries, microservices, cloud managed services (GCP), and storage backends.
+- **C4 Level 3 (Component Diagram):** Zooming into the container internals of the **LangGraph Agentic Brain**, Security Guards, and Data Access Layers.
 
-### System Architecture Diagram (Mermaid)
+> 💡 **Architectural Seniority Note:** In `docs/HLD.md`, framing the architecture under the **C4 Model (Container & Component Level)** mapped to Google Cloud Platform managed services establishes immediate enterprise architectural maturity and rigor.
+
+### System Architecture Diagram (C4 Container & Component Level in Mermaid)
 
 ```mermaid
 flowchart TB
@@ -241,6 +246,57 @@ Our design directly applies the principles established in LangChain's enterprise
 | **Resilience & Self-Correction** | **Durable Graph Runtime & Loops** | Replaces brittle linear chains with a **LangGraph StateGraph**. When BigQuery yields syntax/empty errors, the graph loops back to a self-correction node with a hard retry budget ($\le 2$) to protect FinOps economics. |
 | **Agility / Persona Management (CEO Tone)** | **Context Hub / Prompt as an Artifact** | Decouples prompts and persona definitions from application code into an externalized, environment-tagged repository, enabling non-technical stakeholders to iterate on tone without redeploying code. |
 | **Quality Assurance & Observability** | **Agent Development Lifecycle (ADLC) & Trajectory Evals** | Moves beyond traditional unit tests into **Golden Datasets, Trajectory Testing, and Token Attribution Tracing**, measuring accuracy, latency, and cost-per-correct-interaction. |
+
+---
+
+## ⚖️ 6.2 Architectural Trade-offs Table (Prototype vs. Enterprise Production)
+
+To demonstrate clear architectural reasoning and defend our choices during the Phase 3 Technical Interview, the table below outlines the trade-offs made between the local **Working Prototype** and the **Enterprise Production Target (HLD)**:
+
+| Architectural Dimension | Prototype Choice (Local CLI) | Enterprise Target Choice (Production HLD) | Rationale & Trade-off Analysis |
+|---|---|---|---|
+| **Storage & Persistence (Saved Reports)** | Local SQLite (`reports.db`) | Managed Cloud SQL (PostgreSQL) + GCS Bucket | **Prototype:** Zero-dependency, file-based ACID storage runnable out-of-the-box on any machine.<br/>**Production:** Multi-region HA, row-level security (RLS), automated backups, point-in-time recovery. |
+| **User Identity & Scoping** | CLI Parameter (`--user-id <ID>`) / Interactive Department Selector | Cryptographic JWT claims passed via API Gateway / BFF | **Prototype:** Simulates row-level product/brand scoping without complex identity provider mockups.<br/>**Production:** Zero-trust RBAC tokens decoded at the gateway to inject brand/department scopes into SQL queries. |
+| **Agent Orchestration** | LangGraph StateGraph (Local Memory Checkpointer) | LangGraph / LangSmith Deployment with Distributed Redis State | **Prototype:** Clean, observable state machine managing self-correction loops and interruptions in-process.<br/>**Production:** Horizontal scalability, durable multi-day execution, thread checkpointing surviving pod restarts. |
+| **Schema Awareness** | Dynamic Schema Inspection via BigQuery Client API | Cached Information Schema in Redis + Metadata Vector Index | **Prototype:** Queries BigQuery metadata at startup for accurate few-shot context without external services.<br/>**Production:** Sub-millisecond schema lookups preventing redundant BigQuery metadata scan latency and costs. |
+| **Golden Knowledge Lake** | Local Curated Few-Shot Mock Trios (In-Memory) | Google Cloud Storage (GCS) + Vertex AI Vector Search | **Prototype:** Provides immediate grounding and query syntax hints without needing a dedicated vector database.<br/>**Production:** Asynchronous embedding ETL pipeline indexing thousands of historical expert analysis reports. |
+| **Safety & PII Guardrails** | In-process Regex & NLP Entity Redaction Gate | Centralized LLM Gateway / Google Cloud Sensitive Data Protection (DLP) | **Prototype:** Zero external API latency/cost; deterministically redacts names, emails, and IPs from the `users` table.<br/>**Production:** Enterprise-grade DLP inspection, tokenization, policy enforcement, and audit compliance. |
+| **Error Handling & Resilience** | Graph Self-Correction Loop (Hard-capped at 2 retries) | Distributed Circuit Breakers + Dead-Letter Queues (DLQ) | **Prototype:** Eliminates terminal crashes, handles syntax errors, and respects Gemini free-tier rate limits.<br/>**Production:** Asynchronous retries, exponential backoff with jitter, fallback model routing (Gemini $\rightarrow$ Claude). |
+| **Persona & Instruction Agility** | Local YAML / JSON Persona Config File | Enterprise Context Hub / Prompt Registry (No-code Admin UI) | **Prototype:** Demonstrates weekly executive tone updates without code changes via simple file edits.<br/>**Production:** Role-based UI allowing business leaders to version, A/B test, and deploy system prompts without engineering PRs. |
+
+---
+
+## 🎯 6.3 Opsfleet Evaluator Expectations & Winning Formula
+
+### 1. Market Reality & Canonical Benchmark
+* **The Dataset (`bigquery-public-data.thelook_ecommerce`):** This is Google's official, synthetic retail dataset for Looker and BigQuery. It features realistic e-commerce cardinality and joins (`orders` $\leftrightarrow$ `order_items` $\leftrightarrow$ `products` $\leftrightarrow$ `users`).
+* **The Evaluator's Perspective:** Opsfleet evaluates hundreds of engineers on real-world problem solving. They know this dataset intimately.
+
+### 2. What Fails 80% of Candidates in this Assessment
+* **Naive RAG instead of Text-to-SQL:** Trying to embed raw database rows into a vector database rather than dynamically generating and executing SQL.
+* **Unhandled Crashes on Bad SQL:** LLMs frequently hallucinate column names or invalid joins. If the script crashes on a BigQuery syntax error, the candidate fails immediately.
+* **PII Leakage in Output:** Printing raw customer names, emails, or IP addresses from the `users` table directly to the console.
+* **Over-Engineering the Prototype:** Wasting time setting up Dockerized vector databases or complex microservices for the prototype, running out of time on the HLD and basic CLI usability.
+
+### 3. The "WOW" Factors Evaluators Love to See
+* **Stateful DAG (LangGraph):** Building a real StateGraph with distinct planning, execution, and synthesis nodes instead of linear `if/else` scripts.
+* **Visible Guardrails & Recovery in Console:** Clear, formatted CLI feedback when self-correction or redaction triggers:
+  ```text
+  [10:14:02] ⚠️ BigQuery Syntax Warning: Column 'revenue' not found in table 'orders'.
+  [10:14:03] 🔄 Self-Correction Node [Attempt 1/2]: Adjusting join to 'order_items.sale_price'...
+  [10:14:05] 🛡️ PII Guardrail: Redacted 14 customer email addresses from synthesis.
+  ```
+* **Dynamic Schema Inspection:** The agent queries the actual database schema (`INFORMATION_SCHEMA.COLUMNS`) rather than guessing table structures.
+
+### 4. AI Tools Policy & Phase 3 Defense Readiness
+* **Full Transparency:** Opsfleet explicitly welcomes AI-assisted development (Cursor, Claude, Copilot, Antigravity). 
+* **The Real Test:** During the Phase 3 Technical Interview with Vlad Bondarenko (AI Tech Lead), you will be asked to defend every architectural choice:
+  * *Why use a Directed Acyclic Graph (DAG) instead of a linear LangChain chain?* (State durability, looping for self-correction, HITL interruptions).
+  * *Why SQLite locally vs. PostgreSQL in the HLD?* (Zero-setup evaluation vs. production high availability).
+  * *How does the system prevent token exhaustion during loops?* (FinOps retry budget).
+
+### 5. The "2-Minute README Rule"
+A senior evaluator like Vlad will clone the repository, run `pip install -r requirements.txt`, provide a `GEMINI_API_KEY`, and expect to execute `python main.py` in under two minutes without missing environment errors. Clear setup instructions are non-negotiable.
 
 ---
 
