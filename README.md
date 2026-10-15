@@ -16,7 +16,12 @@ The objective is to design a production-ready **High-Level Design (HLD)** and bu
 
 ## 📂 Repository Contents & Documentation
 
-* 📑 **[Master Execution Plan & Checklist](docs/MASTER_PLAN.md):** Complete operational plan, Slack Q&A alignment with Harry (AI PM) & Vlad (AI Tech Lead), **Architectural Trade-offs Table**, and granular verification checklist.
+* 📑 **[Master Documentation Index](docs/README.md):** Complete technical documentation map and reading order.
+* 🎫 **[Delivery Tickets & Sprints](tickets/README.md):** Granular delivery backlog (OPS-001 to OPS-007) with user stories, acceptance criteria, and PR mapping.
+* 📋 **[Product Requirements Document (PRD)](docs/prd/PRD-RETAIL-ASSISTANT.md):** Business objectives, executive personas, and functional specifications.
+* 📐 **[Technical Specification (RFC-001)](docs/rfc/RFC-001-agentic-data-assistant.md):** Engineering design, LangGraph StateGraph schema, and error-handling pipelines.
+* 🏛️ **[Architecture Decision Records (ADRs)](docs/adr/README.md):** MADR-standard decision logs (ADR 0001 through 0006) capturing trade-offs, consequences, and design choices.
+* 📑 **[Master Execution Plan & Checklist](docs/MASTER_PLAN.md):** Operational blueprint, verbatim Slack Q&A alignment with Harry (AI PM) & Vlad (AI Tech Lead), and regulatory mapping.
 * 💰 **FinOps & Dependency Strategy:** Explicit **Free/OSS-first evaluation stack** (100% runnable at $0.00 cost) vs. Scalable Enterprise Cloud Trade-offs (Langfuse vs. LangSmith, pgvector vs. Pinecone).
 * 🏛️ **C4 Architectural Standard:** HLD structured across the **C4 Model (Level 1 System Context, Level 2 Container & Level 3 Component)** mapped to Google Cloud Platform managed services.
 * 🌐 **Open Protocols & Industry Standards Matrix:** Complete architectural mapping covering **Model Context Protocol (MCP)**, **OpenTelemetry GenAI Semantic Conventions (`gen_ai.*`)**, **BigQuery RLS + Dynamic Data Masking (DDM)**, **BIRD-SQL / Spider 2.0 Evaluation Benchmarks**, and **Universal Commerce Protocol (UCP)**.
@@ -24,10 +29,10 @@ The objective is to design a production-ready **High-Level Design (HLD)** and bu
 * 📄 **[Official Assignment Specification (Markdown)](docs/ASSIGNMENT_SPEC.md):** Markdown version of the retail company challenge.
 * 📄 **[Opsfleet AI Engineer Job Description (Markdown)](docs/JOB_DESCRIPTION.md):** Full role specification and core responsibilities.
 * 📚 **Architectural Foundations & Reference Whitepapers:**
-  * [The Agentic Operating Model (LangChain Whitepaper)](docs/The%20Agentic%20Operating%20Model.pdf) — Enterprise blueprint for the Agent Development Lifecycle (ADLC), LangGraph stateful execution, HITL interrupts, and agentic governance.
+  * [The Agentic Operating Model (LangChain Whitepaper)](docs/assets/The%20Agentic%20Operating%20Model.pdf) — Enterprise blueprint for the Agent Development Lifecycle (ADLC), LangGraph stateful execution, HITL interrupts, and agentic governance.
 * 📦 **Original Assessment PDFs:**
-  * [AI Technical Assignment - Retail Company.pdf](docs/AI%20Technical%20Assignment%20-%20Retail%20Company.pdf)
-  * [AI Engineer Opsfleet.pdf](docs/AI%20Engineer%20Opsfleet.pdf)
+  * [AI Technical Assignment - Retail Company.pdf](docs/assets/AI%20Technical%20Assignment%20-%20Retail%20Company.pdf)
+  * [AI Engineer Opsfleet.pdf](docs/assets/AI%20Engineer%20Opsfleet.pdf)
 
 ---
 
