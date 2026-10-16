@@ -2,7 +2,7 @@
 
 **Client:** Retail Company (Opsfleet is the client for this project; Team Lead + Harry are the Project Managers)  
 **Target Audience:** Non-technical Executive Teams  
-**Slack Canvas:** AI Technical Assignment - Retail Company (Opsfleet Candidate Canvas)
+**Assignment Canvas:** AI Technical Assignment - Retail Company (Opsfleet Candidate Canvas)
 
 ---
 

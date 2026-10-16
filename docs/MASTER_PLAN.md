@@ -9,18 +9,18 @@
 - **Vlad Bondarenko** — AI Tech Lead (Engineering Reviewer)  
 - **Emilija Milevska Nikodinoska** — Talent Acquisition  
 - **Harry** — Project Manager (Opsfleet AI Assistant Agent)  
-- **Candidate Profile:** Rudolfo Félix
+- **Candidate:** Eng. Rudolfo Valentino Marques Félix  
 
 ---
 
-## 🔗 0. Official Document & Workspace Links
+## 🔗 0. Official Document & Workspace References
 
-Here are the direct links to all the original materials, canvases, and environment resources provided for this assessment:
+Here are the references to all original materials, canvases, and environment resources for this assessment:
 
-* 📄 **Official Assignment Canvas (Slack Doc):**  
-  AI Technical Assignment - Retail Company (Opsfleet Candidate Canvas)  
-  * 💬 **Candidate Slack Channel:**  
-  Opsfleet Assignment Collaboration Channel (#t-ai-rudolfo-félix)
+* 📄 **Official Assignment Canvas:**  
+  *AI Technical Assignment - Retail Company (Opsfleet Candidate Canvas)*
+* 💬 **Candidate Collaboration Channel:**  
+  *Internal Slack Channel (`#t-ai-rudolfo-félix`)*
 * 🗄️ **Target BigQuery Dataset:**  
   `bigquery-public-data.thelook_ecommerce`  
   *(Public tables: `orders`, `order_items`, `products`, `users`)*
