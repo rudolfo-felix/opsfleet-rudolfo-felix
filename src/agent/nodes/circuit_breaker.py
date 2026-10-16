@@ -8,13 +8,15 @@ import logging
 from typing import Any
 
 from src.agent.state import AgentState
+from src.guardrails.pii import sanitize_text
 
 logger = logging.getLogger(__name__)
 
 
 def circuit_breaker(state: AgentState) -> dict[str, Any]:
     """Gracefully terminate cyclic self-correction after 2 failed attempts."""
-    last_error = state.get("error_feedback") or "Execution failed to converge on a valid result."
+    raw_error = state.get("error_feedback") or "Execution failed to converge on a valid result."
+    last_error = sanitize_text(raw_error)
     retries = state.get("retry_count", 2)
 
     logger.error(

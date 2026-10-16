@@ -13,6 +13,7 @@ from langgraph.graph import END, START, StateGraph
 from src.agent.nodes.circuit_breaker import circuit_breaker
 from src.agent.nodes.execute_sql import execute_sql
 from src.agent.nodes.generate_sql import generate_sql
+from src.agent.nodes.sanitize_pii import sanitize_pii
 from src.agent.nodes.self_correct import self_correct
 from src.agent.nodes.synthesize import synthesize
 from src.agent.state import AgentState
@@ -44,13 +45,13 @@ def evaluate_execution(state: AgentState) -> str:
     Directs flow to:
     - self_correct: if an error occurred or 0 rows returned AND retry_count < 2.
     - circuit_breaker: if an error occurred or 0 rows returned AND retry_count >= 2.
-    - synthesize: if execution succeeded with rows >= 1.
+    - sanitize_pii: if execution succeeded with rows >= 1 to scrub PII before synthesis.
     """
     if state.get("error_feedback"):
         if state.get("retry_count", 0) < 2:
             return "self_correct"
         return "circuit_breaker"
-    return "synthesize"
+    return "sanitize_pii"
 
 
 def reports_node(state: AgentState) -> dict[str, Any]:
@@ -83,6 +84,7 @@ def create_retail_agent_graph(checkpointer: Any | None = None) -> Any:
     workflow.add_node("execute_sql", execute_sql)
     workflow.add_node("self_correct", self_correct)
     workflow.add_node("circuit_breaker", circuit_breaker)
+    workflow.add_node("sanitize_pii", sanitize_pii)
     workflow.add_node("synthesize", synthesize)
     workflow.add_node("reports", reports_node)
     workflow.add_node("help", help_node)
@@ -107,12 +109,15 @@ def create_retail_agent_graph(checkpointer: Any | None = None) -> Any:
         {
             "self_correct": "self_correct",
             "circuit_breaker": "circuit_breaker",
-            "synthesize": "synthesize",
+            "sanitize_pii": "sanitize_pii",
         },
     )
 
     # Reflection loop back to SQL generator
     workflow.add_edge("self_correct", "generate_sql")
+
+    # PII Sanitizer Gate to Synthesizer
+    workflow.add_edge("sanitize_pii", "synthesize")
 
     # Terminal edges
     workflow.add_edge("circuit_breaker", END)

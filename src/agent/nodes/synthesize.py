@@ -4,7 +4,6 @@ Translates tabular query outputs into strategic briefings for Sarah (CEO / VP of
 strictly structured into three H2 sections and enforcing zero-PII data ingress.
 """
 
-import copy
 import logging
 from typing import Any
 
@@ -14,34 +13,29 @@ from google.genai import types
 from src.agent.resilience import retry_with_backoff
 from src.agent.state import AgentState
 from src.config import Settings, get_settings
+from src.guardrails.pii import (
+    TOKEN_ADDRESS,
+    TOKEN_EMAIL,
+    TOKEN_IP,
+    TOKEN_NAME,
+    sanitize_records,
+    sanitize_text,
+)
 
 logger = logging.getLogger(__name__)
 
 PII_KEYS_MAP = {
-    "email": "[EMAIL_REDACTED]",
-    "first_name": "[NAME_REDACTED]",
-    "last_name": "[NAME_REDACTED]",
-    "street_address": "[ADDRESS_REDACTED]",
-    "ip_address": "[IP_REDACTED]",
+    "email": TOKEN_EMAIL,
+    "first_name": TOKEN_NAME,
+    "last_name": TOKEN_NAME,
+    "street_address": TOKEN_ADDRESS,
+    "ip_address": TOKEN_IP,
 }
 
 
 def defensive_scrub_records(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Defensive in-node PII scrubber ensuring zero customer identifiers reach LLM context."""
-    if not records:
-        return []
-
-    scrubbed = []
-    for row in records:
-        clean_row = copy.copy(row)
-        for k, v in clean_row.items():
-            k_lower = k.lower()
-            for pii_key, token in PII_KEYS_MAP.items():
-                if pii_key in k_lower and v is not None:
-                    clean_row[k] = token
-                    break
-        scrubbed.append(clean_row)
-    return scrubbed
+    return sanitize_records(records)
 
 
 def format_records_as_markdown(records: list[dict[str, Any]], max_rows: int = 25) -> str:
@@ -107,8 +101,9 @@ def synthesize(
     else:
         data_records = raw_results
 
-    user_query = state.get("user_query", "Executive Data Request")
-    current_sql = state.get("current_sql", "")
+    # 2. Ingress PII Scrubbing: Protect against leakage through query text or SQL literals
+    user_query = sanitize_text(state.get("user_query", "Executive Data Request"))
+    current_sql = sanitize_text(state.get("current_sql", ""))
     data_markdown = format_records_as_markdown(data_records)
 
     system_instruction = (
@@ -146,7 +141,10 @@ def synthesize(
         system_instruction=system_instruction,
     )
 
-    report_text = getattr(response, "text", "") or ""
+    raw_report_text = getattr(response, "text", "") or ""
+
+    # Egress PII scrubbing defense: ensure no accidental PII in generated report
+    report_text = sanitize_text(raw_report_text)
 
     # Defensive check: ensure all 3 H2 headers exist
     if not (

@@ -10,6 +10,7 @@ from typing import Any
 from src.agent.state import AgentState
 from src.bq.client import get_bigquery_client
 from src.bq.exceptions import BigQueryClientError, ReadOnlyQueryViolationError
+from src.guardrails.scope import apply_brand_scoping
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +42,11 @@ def execute_sql(
             "query_results": None,
             "error_feedback": "Execution failed: No SQL query was generated to execute.",
         }
+
+    # Inbound gatekeeper: guarantee brand scoping is applied prior to database execution
+    allowed_brands = state.get("allowed_brands")
+    if allowed_brands:
+        sql = apply_brand_scoping(sql, allowed_brands)
 
     active_client = client or get_bigquery_client()
 

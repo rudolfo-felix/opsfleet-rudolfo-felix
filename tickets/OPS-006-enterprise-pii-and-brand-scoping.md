@@ -1,5 +1,5 @@
 ## OPS-006: Enterprise PII Sanitizer Gate & User Brand Scoping
-Status: backlog  
+Status: done  
 Branch: feat/OPS-006-pii-scoping-guardrails  
 Priority: Critical  
 

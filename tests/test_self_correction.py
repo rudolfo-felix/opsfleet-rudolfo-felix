@@ -57,9 +57,9 @@ def test_execute_sql_success_rows():
     assert len(update["query_results"]) == 2
     assert update["error_feedback"] is None
 
-    # Verify evaluate_execution routes to synthesize
+    # Verify evaluate_execution routes to sanitize_pii gate
     state.update(update)
-    assert evaluate_execution(state) == "synthesize"
+    assert evaluate_execution(state) == "sanitize_pii"
 
 
 def test_execute_sql_zero_rows_mitigation3_diagnostic():

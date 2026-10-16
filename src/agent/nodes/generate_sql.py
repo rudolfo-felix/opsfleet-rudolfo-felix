@@ -19,6 +19,7 @@ from src.agent.resilience import retry_with_backoff
 from src.agent.state import AgentState
 from src.bq.schema import sanitize_table_qualification
 from src.config import Settings, get_settings
+from src.guardrails.scope import apply_brand_scoping
 
 logger = logging.getLogger(__name__)
 
@@ -79,6 +80,11 @@ def generate_sql(
     raw_sql = getattr(response, "text", "") or ""
     clean_sql = strip_markdown_fences(raw_sql)
     sanitized_sql = sanitize_table_qualification(clean_sql)
+
+    # Enforce row-level brand scoping if user context is restricted
+    allowed_brands = state.get("allowed_brands")
+    if allowed_brands:
+        sanitized_sql = apply_brand_scoping(sanitized_sql, allowed_brands)
 
     # Token accounting for FinOps telemetry
     tokens = 0

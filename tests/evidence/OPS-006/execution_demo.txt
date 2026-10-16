@@ -1,0 +1,63 @@
+================================================================================
+DEMONSTRATION 1: IN-PROCESS PII REDACTION (ADR-0005 & INVARIANT 9)
+================================================================================
+Raw Input Record:
+[
+  {
+    "id": 1001,
+    "first_name": "Eleanor",
+    "last_name": "Vane",
+    "email": "eleanor.vane@nassau-retail.com",
+    "ip_address": "198.51.100.42",
+    "street_address": "84 Queen Anne Shore",
+    "name": "Calvin Klein Slim Fit Chino",
+    "spend": 349.5
+  }
+]
+
+Sanitized Record (Customer Identifiers Masked, Product Name Preserved):
+[
+  {
+    "id": 1001,
+    "first_name": "[NAME_REDACTED]",
+    "last_name": "[NAME_REDACTED]",
+    "email": "[EMAIL_REDACTED]",
+    "ip_address": "[IP_REDACTED]",
+    "street_address": "[ADDRESS_REDACTED]",
+    "name": "Calvin Klein Slim Fit Chino",
+    "spend": 349.5
+  }
+]
+
+================================================================================
+DEMONSTRATION 2: FREE-FORM TEXT REGEX SANITIZATION
+================================================================================
+Original Text:  Audit note: Admin accessed account of john.doe@example.com from 203.0.113.88 during order 992.
+Sanitized Text: Audit note: Admin accessed account of [EMAIL_REDACTED] from [IP_REDACTED] during order 992.
+
+================================================================================
+DEMONSTRATION 3: ROW-LEVEL BRAND SCOPING & MITIGATION 2 (CONDITIONAL EXEMPTION)
+================================================================================
+Catalog Query:        SELECT name, retail_price FROM products WHERE category = 'Pants'
+Scoped Catalog Query: SELECT name, retail_price FROM products WHERE category = 'Pants' AND brand IN ('Calvin Klein', 'Tommy Hilfiger')
+
+Users Demographics Query: SELECT state, COUNT(*) FROM thelook_ecommerce.users WHERE country = 'US' GROUP BY state
+Brand Scoping Required?   False
+Scoped Users Query:       SELECT state, COUNT(*) FROM thelook_ecommerce.users WHERE country = 'US' GROUP BY state (Mitigation 2 Exempted!)
+
+================================================================================
+DEMONSTRATION 4: LANGGRAPH PII SANITIZER GATE
+================================================================================
+State sanitized_results populated successfully:
+[
+  {
+    "id": 1001,
+    "first_name": "[NAME_REDACTED]",
+    "last_name": "[NAME_REDACTED]",
+    "email": "[EMAIL_REDACTED]",
+    "ip_address": "[IP_REDACTED]",
+    "street_address": "[ADDRESS_REDACTED]",
+    "name": "Calvin Klein Slim Fit Chino",
+    "spend": 349.5
+  }
+]
