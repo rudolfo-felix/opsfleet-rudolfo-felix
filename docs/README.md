@@ -34,7 +34,7 @@ This documentation suite follows enterprise architecture standards (C4 Model, MA
    └── docs/HLD.md                          ──> C4 Model (L1 Context, L2 Container, L3 Component)
 
 6. Delivery Management & Sprints:
-   └── tickets/README.md                    ──> Kanban Ticket Index (OPS-001 through OPS-007)
+   └── tickets/README.md                    ──> Kanban Ticket Index (OPS-001 through OPS-010)
 ```
 
 ---

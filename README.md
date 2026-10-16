@@ -56,10 +56,14 @@ The objective is to design a production-ready **High-Level Design (HLD)** and bu
 ### Delivery Milestones:
 - [x] Repository created and synchronized on GitHub (`rudolfo-felix/opsfleet-rudolfo-felix`).
 - [x] Enterprise Architecture Governance: PRD, RFC-001, ADRs (0001–0007), Domain Ontology & Ubiquitous Language.
-- [ ] OPS-001: Environment Scaffolding, Pinned Dependencies & Config.
-- [ ] OPS-002: BigQuery Client, Dynamic Schema Caching & Mock Engine.
-- [ ] OPS-003: LangGraph Agent Brain, GoogleSQL Gen & Self-Correction Loop.
-- [ ] OPS-004: Enterprise PII Redaction & User Brand Scoping Guardrails.
-- [ ] OPS-005: Saved Reports SQLite Storage & EU AI Act HITL Confirmation.
-- [ ] OPS-006: Rich Interactive CLI Interface & OTel-Compliant Telemetry.
-- [ ] OPS-007: C4 Model High-Level Design (HLD) Document (8 Production Requirements).
+- [ ] OPS-001: Environment Scaffolding, Pydantic Config & Rate-Limit Backoff Decorator.
+- [ ] OPS-002A: BigQuery Live Client, Dynamic Schema Cache & Table Qualification Sanitizer.
+- [ ] OPS-002B: Offline Mock DuckDB Engine & Synthetic E-Commerce Fixtures.
+- [ ] OPS-003: LangGraph State Schema & GoogleSQL Generation Node (ONT-001 rules).
+- [ ] OPS-004: Execution Node, Self-Correction Loop & FinOps Circuit Breaker ($\le 2$).
+- [ ] OPS-005: Executive Insight & Action Item Synthesizer Node (Sarah/CEO Persona).
+- [ ] OPS-006: Enterprise PII Sanitizer Gate & User Brand Scoping Guardrails.
+- [ ] OPS-007: Saved Reports SQLite Storage & EU AI Act HITL Deletion Interrupt.
+- [ ] OPS-008: OpenTelemetry GenAI Telemetry & Token/Call Budget Tracker.
+- [ ] OPS-009: Rich Interactive CLI Interface, Session Orchestrator & `main.py` Entrypoint.
+- [ ] OPS-010: C4 Model Production HLD Document & 20-Battery Test Runner.
