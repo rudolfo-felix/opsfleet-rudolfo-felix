@@ -1,21 +1,69 @@
 # Delivery Tickets & Sprints Index
 
-This directory contains the user stories, acceptance criteria, and completion criteria for each atomic milestone of the **Retail Data Analysis AI Assistant**.
-Every commit and feature branch maps directly to a ticket ID (`OPS-XXX`).
+This directory contains the user stories, acceptance criteria, and completion criteria for each atomic milestone of the **Retail Data Analysis AI Assistant**.  
+Every commit and feature branch maps directly to an atomic ticket ID (`OPS-XXX`).
 
 ---
 
-## 📋 Active Tickets Table
+## 📋 Active Delivery Tickets Table
 
-| Story ID | Title | Status | Branch | PR | Priority |
-|:---:|---|:---:|:---:|:---:|:---:|
-| **[OPS-001](./OPS-001-environment-scaffolding.md)** | Repository Scaffolding, Pinned Dependencies & Config | `backlog` | `feat/OPS-001-scaffolding` | - | High |
-| **[OPS-002](./OPS-002-bigquery-schema-client.md)** | BigQuery Client, Dynamic Schema Caching & Mock Engine | `backlog` | `feat/OPS-002-bigquery-client` | - | High |
-| **[OPS-003](./OPS-003-langgraph-self-correction.md)** | LangGraph Agent Brain, GoogleSQL Gen & Self-Correction Loop | `backlog` | `feat/OPS-003-langgraph-core` | - | Critical |
-| **[OPS-004](./OPS-004-pii-masking-guardrails.md)** | Enterprise PII Redaction & User Brand Scoping Guardrails | `backlog` | `feat/OPS-004-pii-guardrails` | - | Critical |
-| **[OPS-005](./OPS-005-saved-reports-hitl.md)** | Saved Reports SQLite Storage & EU AI Act HITL Confirmation | `backlog` | `feat/OPS-005-reports-hitl` | - | High |
-| **[OPS-006](./OPS-006-rich-cli-observability.md)** | Rich Interactive CLI Interface & OTel-Compliant Telemetry | `backlog` | `feat/OPS-006-cli-telemetry` | - | High |
-| **[OPS-007](./OPS-007-production-hld.md)** | C4 Model High-Level Design (HLD) Document (8 Requirements) | `backlog` | `feat/OPS-007-hld-docs` | - | Critical |
+| Story ID | Title & Scope | Status | Branch | Priority |
+|:---:|---|:---:|:---:|:---:|
+| **[OPS-001](./OPS-001-scaffolding-config-resilience.md)** | Repository Scaffolding, Pydantic Config & Rate-Limit Backoff | `backlog` | `feat/OPS-001-scaffolding` | High |
+| **[OPS-002A](./OPS-002A-bigquery-live-client.md)** | BigQuery Live Client, Dynamic Schema Cache & Table Sanitizer | `backlog` | `feat/OPS-002A-bq-live-client` | High |
+| **[OPS-002B](./OPS-002B-offline-mock-duckdb-engine.md)** | Offline Mock DuckDB Engine & Synthetic E-Commerce Fixtures | `backlog` | `feat/OPS-002B-mock-duckdb-engine` | High |
+| **[OPS-003](./OPS-003-langgraph-state-and-sql-generator.md)** | LangGraph State Schema & GoogleSQL Generation Node | `backlog` | `feat/OPS-003-state-sql-gen` | Critical |
+| **[OPS-004](./OPS-004-sql-execution-and-self-correction.md)** | Execution Node, Self-Correction Loop & FinOps Circuit Breaker | `backlog` | `feat/OPS-004-execution-self-correction` | Critical |
+| **[OPS-005](./OPS-005-executive-report-synthesizer.md)** | Executive Insight & Action Item Synthesizer Node | `backlog` | `feat/OPS-005-report-synthesizer` | High |
+| **[OPS-006](./OPS-006-enterprise-pii-and-brand-scoping.md)** | Enterprise PII Sanitizer Gate & User Brand Scoping | `backlog` | `feat/OPS-006-pii-scoping-guardrails` | Critical |
+| **[OPS-007](./OPS-007-saved-reports-and-hitl-interrupt.md)** | Saved Reports SQLite Storage & EU AI Act HITL Interrupt | `backlog` | `feat/OPS-007-reports-hitl` | High |
+| **[OPS-008](./OPS-008-opentelemetry-genai-tracing.md)** | OpenTelemetry GenAI Telemetry & Token Accounting | `backlog` | `feat/OPS-008-otel-telemetry` | Medium |
+| **[OPS-009](./OPS-009-rich-cli-interface-and-main.md)** | Rich Interactive CLI Interface & Application Entrypoint (`main.py`) | `backlog` | `feat/OPS-009-rich-cli-main` | High |
+| **[OPS-010](./OPS-010-production-hld-and-20-battery-runner.md)** | Production HLD Document, 20-Battery Test Runner & Delivery Gate | `backlog` | `feat/OPS-010-production-hld-eval` | Critical |
+
+---
+
+## ⚡ Execution DAG (Directed Acyclic Graph)
+
+```mermaid
+flowchart TD
+    classDef scaffold fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
+    classDef data fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
+    classDef brain fill:#ede7f6,stroke:#512da8,stroke-width:2px;
+    classDef security fill:#fff3e0,stroke:#e65100,stroke-width:2px;
+    classDef delivery fill:#fce4ec,stroke:#c2185b,stroke-width:2px;
+
+    OPS001["OPS-001\nScaffolding, Config & 429 Backoff"]:::scaffold
+    
+    OPS002A["OPS-002A\nBQ Live Client & Schema Cache"]:::data
+    OPS002B["OPS-002B\nOffline Mock DuckDB Engine"]:::data
+    OPS006["OPS-006\nPII Sanitizer & Brand Scoping"]:::security
+    OPS007["OPS-007\nSQLite Reports & HITL Interrupt"]:::security
+
+    OPS003["OPS-003\nState, Prompts & SQL Gen Node"]:::brain
+    OPS004["OPS-004\nExecution, Self-Correction & Cap"]:::brain
+    OPS005["OPS-005\nExecutive Insight Synthesizer"]:::brain
+
+    OPS008["OPS-008\nOTel Telemetry & Call Tracker"]:::delivery
+    OPS009["OPS-009\nRich CLI & main.py Entrypoint"]:::delivery
+    OPS010["OPS-010\nC4 HLD Docs & 20-Battery Runner"]:::delivery
+
+    OPS001 --> OPS002A
+    OPS001 --> OPS002B
+    OPS001 --> OPS006
+    OPS001 --> OPS007
+
+    OPS002A --> OPS003
+    OPS002B --> OPS004
+    OPS003 --> OPS004
+    OPS004 --> OPS005
+    OPS006 --> OPS005
+
+    OPS005 --> OPS008
+    OPS007 --> OPS009
+    OPS008 --> OPS009
+    OPS009 --> OPS010
+```
 
 ---
 
@@ -24,4 +72,4 @@ Every commit message must be linked to its corresponding story ID:
 ```text
 OPS-XXX <type>(<scope>): <summary in imperative mood>
 ```
-*Example:* `OPS-001 feat(env): configure requirements.txt and pydantic settings`
+*Example:* `OPS-001 feat(config): configure requirements.txt and pydantic settings`

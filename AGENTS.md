@@ -25,11 +25,11 @@ Before writing any code or modifying documentation, you MUST read the following 
    - [ADR-0006](docs/adr/0006-configurable-gemini-flash-and-rate-limit-backoff.md): Configurable Gemini Flash family & HTTP 429 backoff.
    - [ADR-0007](docs/adr/0007-domain-driven-semantic-layer-for-text-to-sql.md): Domain-Driven semantic layer for SQL precision.
 5. **[Operational Master Plan](docs/MASTER_PLAN.md):** Full Slack alignment with Harry (PM) and Vlad Bondarenko (Tech Lead), C4 diagrams, regulatory mapping, and the Priority 0 Checklist.
-6. **[Delivery Backlog Index](tickets/README.md):** Kanban tracking for tickets `OPS-001` through `OPS-007`.
+6. **[Delivery Backlog Index](tickets/README.md):** Kanban tracking for tickets `OPS-001` through `OPS-010`.
 
 ---
 
-## 🛡️ 2. Core Architectural Invariants (Non-Negotiables)
+## 🛡️ 2. Core Architectural Invariants & Technical Mitigations
 
 1. **The 2-Minute Evaluator Rule:** Evaluator Vlad Bondarenko will clone the repository, populate `GEMINI_API_KEY` in `.env`, and execute `python main.py` in under 2 minutes. The application must NEVER crash due to missing dependencies, unhandled exceptions, or unconfigured cloud environments.
 2. **Model Selection & Configurability (Vlad Directive):**
@@ -38,12 +38,15 @@ Before writing any code or modifying documentation, you MUST read the following 
    - NEVER hardcode `gemini-1.5` (retired) or `gemini-pro` (excluded from free tier).
 3. **Rate Limit Resilience:** All Gemini API invocations must be wrapped in an exponential backoff retry loop with jitter handling HTTP 429 (`RESOURCE_EXHAUSTED`). Render clean terminal progress rather than unhandled tracebacks.
 4. **Call Budget Discipline:** Total LLM invocations per user question must stay strictly between **2 and 5 calls**, conforming to Vlad's free-tier guidance.
-5. **Dual BigQuery Engine (Live + Offline Mock Fallback):**
+5. **Dual BigQuery Engine (Live + DuckDB Offline Mock Fallback):**
    - If GCP Application Default Credentials (ADC) or a billing project are present, connect to live `bigquery-public-data.thelook_ecommerce`.
-   - If GCP credentials are NOT present, automatically fall back to the built-in offline mock engine (`src/bq/mock_engine.py`) containing realistic tables (`orders`, `order_items`, `products`, `users`). Evaluators must be able to run queries out of the box with zero GCP setup.
-6. **Enterprise PII Redaction:** Scrub all sensitive fields (`email`, `first_name`, `last_name`, `ip_address`) from terminal display and synthesized reports.
-7. **High-Stakes Oversight (EU AI Act Art. 14):** Destructive actions (e.g. deleting saved reports) MUST pause and require explicit human confirmation (`[y/N]`) before committing.
-8. **Self-Correction Cap:** SQL retry loop is strictly capped at $\le 2$ attempts to prevent infinite loops and quota drain.
+   - If GCP credentials are NOT present, automatically fall back to the built-in offline in-memory **DuckDB engine** (`src/bq/mock_engine.py`) containing realistic tables (`orders`, `order_items`, `products`, `users`). Evaluators must be able to run queries out of the box with zero GCP setup.
+6. **Table Qualification Sanitizer (Mitigation 1):** Pre-execution sanitizer automatically ensures all table references are fully qualified (`` `bigquery-public-data.thelook_ecommerce.<table_name>` ``) and temporal intervals conform to BigQuery standard syntax.
+7. **Conditional Brand Scoping (Mitigation 2):** Scoping guard injects brand filters for transactional/product queries, while cleanly handling pure demographic `users` queries without invalid column errors.
+8. **Empty Result Diagnostic Feedback (Mitigation 3):** The self-correction loop catches queries returning 0 rows due to case-sensitivity or restrictive filters and suggests corrective adjustments.
+9. **Enterprise PII Redaction:** Scrub all sensitive fields (`email`, `first_name`, `last_name`, `ip_address`) from terminal display and synthesized reports.
+10. **High-Stakes Oversight with Checkpointer (Mitigation 5):** Destructive actions (e.g. deleting saved reports) halt graph execution via LangGraph `MemorySaver` `interrupt()` and require explicit human confirmation (`[y/N]`) before committing.
+11. **Self-Correction Cap:** SQL retry loop is strictly capped at $\le 2$ attempts to prevent infinite loops and quota drain.
 
 ---
 
@@ -53,13 +56,17 @@ Implement the repository milestone by milestone according to the ticket backlog:
 
 | Milestone | Ticket File | Description | Core Artifacts |
 |---|---|---|---|
-| **OPS-001** | [`tickets/OPS-001-environment-scaffolding.md`](tickets/OPS-001-environment-scaffolding.md) | Python environment, dependencies, `.env.example`, Pydantic settings. | `requirements.txt`, `.env.example`, `src/config.py` |
-| **OPS-002** | [`tickets/OPS-002-bigquery-schema-client.md`](tickets/OPS-002-bigquery-schema-client.md) | BigQuery client, dynamic schema introspection, and offline mock fallback engine. | `src/bq/client.py`, `src/bq/schema.py`, `src/bq/mock_engine.py` |
-| **OPS-003** | [`tickets/OPS-003-langgraph-self-correction.md`](tickets/OPS-003-langgraph-self-correction.md) | LangGraph StateGraph, GoogleSQL generator with ONT-001 ontology rules, self-correction loop ($\le 2$). | `src/agent/state.py`, `src/agent/graph.py`, `src/agent/sql_gen.py`, `src/agent/self_correct.py` |
-| **OPS-004** | [`tickets/OPS-004-pii-masking-guardrails.md`](tickets/OPS-004-pii-masking-guardrails.md) | Deterministic Presidio / regex PII masking and user brand row-level scoping. | `src/guardrails/pii.py`, `src/guardrails/scoping.py` |
-| **OPS-005** | [`tickets/OPS-005-saved-reports-hitl.md`](tickets/OPS-005-saved-reports-hitl.md) | Local SQLite persistence for saved reports and HITL deletion confirmation interrupt. | `src/storage/reports.py`, `src/agent/hitl.py` |
-| **OPS-006** | [`tickets/OPS-006-rich-cli-observability.md`](tickets/OPS-006-rich-cli-observability.md) | Rich interactive terminal chat UI, spinners, OTel GenAI telemetry, and rate-limit backoff. | `main.py`, `src/cli.py`, `src/telemetry/tracer.py` |
-| **OPS-007** | [`tickets/OPS-007-production-hld.md`](tickets/OPS-007-production-hld.md) | Comprehensive enterprise High-Level Design covering all 8 production requirements with C4 diagrams. | `docs/HLD.md` |
+| **OPS-001** | [`tickets/OPS-001-scaffolding-config-resilience.md`](tickets/OPS-001-scaffolding-config-resilience.md) | Python environment, dependencies, `.env.example`, Pydantic settings & 429 backoff decorator. | `requirements.txt`, `.env.example`, `src/config.py`, `src/agent/resilience.py` |
+| **OPS-002A** | [`tickets/OPS-002A-bigquery-live-client.md`](tickets/OPS-002A-bigquery-live-client.md) | BigQuery client, dynamic schema introspection, caching & table qualification sanitizer. | `src/bq/client.py`, `src/bq/schema.py` |
+| **OPS-002B** | [`tickets/OPS-002B-offline-mock-duckdb-engine.md`](tickets/OPS-002B-offline-mock-duckdb-engine.md) | In-memory DuckDB offline mock engine with synthetic e-commerce fixtures & auto-fallback. | `src/bq/mock_engine.py` |
+| **OPS-003** | [`tickets/OPS-003-langgraph-state-and-sql-generator.md`](tickets/OPS-003-langgraph-state-and-sql-generator.md) | `AgentState` schema, domain few-shot prompts & GoogleSQL generation node with ONT-001 rules. | `src/agent/state.py`, `src/agent/prompts.py`, `src/agent/nodes/generate_sql.py` |
+| **OPS-004** | [`tickets/OPS-004-sql-execution-and-self-correction.md`](tickets/OPS-004-sql-execution-and-self-correction.md) | SQL execution runner, self-correction reflection node, empty result handling & circuit breaker ($\le 2$). | `src/agent/nodes/execute_sql.py`, `src/agent/nodes/self_correct.py`, `src/agent/graph.py` |
+| **OPS-005** | [`tickets/OPS-005-executive-report-synthesizer.md`](tickets/OPS-005-executive-report-synthesizer.md) | Executive insight & Q2 action item synthesizer node tailored to Sarah (CEO / VP). | `src/agent/nodes/synthesize.py` |
+| **OPS-006** | [`tickets/OPS-006-enterprise-pii-and-brand-scoping.md`](tickets/OPS-006-enterprise-pii-and-brand-scoping.md) | Deterministic Presidio / regex PII masking and user brand row-level scoping guardrails. | `src/guardrails/pii.py`, `src/guardrails/scope.py` |
+| **OPS-007** | [`tickets/OPS-007-saved-reports-and-hitl-interrupt.md`](tickets/OPS-007-saved-reports-and-hitl-interrupt.md) | Local SQLite persistence for saved reports and EU AI Act HITL deletion confirmation interrupt. | `src/storage/reports.py`, `src/agent/nodes/reports.py` |
+| **OPS-008** | [`tickets/OPS-008-opentelemetry-genai-tracing.md`](tickets/OPS-008-opentelemetry-genai-tracing.md) | OpenTelemetry GenAI semantic tracing, node latency, and 2–5 call budget tracker. | `src/telemetry/tracer.py` |
+| **OPS-009** | [`tickets/OPS-009-rich-cli-interface-and-main.md`](tickets/OPS-009-rich-cli-interface-and-main.md) | Rich interactive terminal chat UI, telemetry panel, and `main.py` entrypoint. | `main.py`, `src/cli/view.py`, `src/cli/tables.py` |
+| **OPS-010** | [`tickets/OPS-010-production-hld-and-20-battery-runner.md`](tickets/OPS-010-production-hld-and-20-battery-runner.md) | Comprehensive enterprise High-Level Design (HLD) with C4 diagrams and 20-battery test runner. | `docs/HLD.md`, `scripts/verify_batteries.py` |
 
 ---
 
