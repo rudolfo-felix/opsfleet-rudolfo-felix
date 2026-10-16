@@ -1,5 +1,5 @@
 ## OPS-002A: BigQuery Live Client, Dynamic Schema Cache & Table Sanitizer
-Status: backlog  
+Status: done  
 Branch: feat/OPS-002A-bq-live-client  
 Priority: High  
 
@@ -23,7 +23,7 @@ Provide high-performance, live schema metadata to prompt generators without stat
 
 ### Implementation & Architecture
 - 📄 **Related ADR:** [ADR-0003](../docs/adr/0003-bigquery-dynamic-schema-with-mock-fallback.md)
-- 📄 **Technical Spec:** [RFC-001](../docs/rfc/RFC-001-agentic-data-assistant.md) §3.1
+- 📄 **Technical Spec:** [RFC-OPS-002A](../docs/rfc/RFC-OPS-002A-bigquery-live-client.md)
 
 ### Completion Criteria
 1. `src/bq/client.py` and `src/bq/schema.py` implemented.
