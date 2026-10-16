@@ -25,7 +25,7 @@ Deliver a clean, reproducible project structure adhering to Vlad Bondarenko's re
 
 ### Implementation & Architecture
 - 📄 **Related ADR:** [ADR-0006](../docs/adr/0006-configurable-gemini-flash-and-rate-limit-backoff.md)
-- 📄 **Technical Spec:** [RFC-001](../docs/rfc/RFC-001-agentic-data-assistant.md) §4.3
+- 📄 **Technical Spec:** [RFC-OPS-001](../docs/rfc/RFC-OPS-001-scaffolding-config-resilience.md)
 
 ### Completion Criteria
 1. `pyproject.toml`, `requirements.txt`, `.env.example`, `src/config.py`, `src/agent/resilience.py`, and `tests/conftest.py` implemented.
