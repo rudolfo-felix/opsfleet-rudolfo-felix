@@ -8,34 +8,38 @@
 ## 🤖 1. Reviewed Model Allocation & FinOps Plan
 
 ### Token & Model Availability Context
-* **Antigravity State:** Claude Sonnet 4.6, Claude Opus 4.6, and GPT-OSS 120B are in a **4h41m cooldown/rate-limit period**.  
-  **Active Model in Antigravity:** **Gemini 3.8 Flash (High)** is available with ample capacity.
-* **Codex CLI State:** Authenticated, trusted, with **81% quota remaining** (`codex-cli 0.163.0` verified at `~/.local/bin/codex`), with the newly updated model suite from `~/.codex/models_cache.json`:
+* **Antigravity State:** Claude Sonnet 4.6, Claude Opus 4.6, and GPT-OSS 120B will be available at **~17:01** (current cooldown: ~3h 28m remaining from 13:33).  
+  **Active Model in Antigravity:** **Gemini 3.8 Flash (High)** is available with unlimited capacity.
+  - *Web Benchmark Verification:* **73.7% DeepSWE v1.1** (long-horizon software engineering), **90.8% Terminal-Bench 2.1**, 1M token context window.
+  - *Strategic Priority:* **Priority 1 for simple, deterministic, and boilerplate tasks** directly in Antigravity at **0% Codex quota cost**.
+* **Codex CLI State:** Authenticated, trusted, with **81% quota remaining** (`codex-cli 0.163.0` verified at `~/.local/bin/codex`), with the updated model suite from `~/.codex/models_cache.json`:
   - `gpt-6-luna` (fast, efficient, official migration successor to `gpt-5.4-mini`)
   - `gpt-5.6-terra` (balanced multi-file engineering model, default in `~/.codex/config.toml`, successor to `gpt-5.5`)
   - `gpt-5.6-luna` (high-capacity reasoning model for complex state machines & reflection)
   - `gpt-reserve` (dedicated agentic coding fallback model)
   - `codex-auto-review` (automated reviewer model)
-* **Antigravity CLI (`agy`):** Shares the same Antigravity account and model quotas as the IDE. Because Claude and GPT-OSS are rate-limited on Antigravity, `agy` does not unlock them. Therefore, **Codex CLI is our primary execution engine for code**, while Antigravity with **Gemini 3.8 Flash** acts as our **First Mate / Orchestrator / Documentation Engine**.
+* **Execution Division of Labor:**
+  - **Gemini 3.8 Flash (High)** (Antigravity): Primary executor for boilerplate, schemas, PII rules, OTel tracing, report synthesis, and test runners (**0% Codex quota**).
+  - **Codex CLI** (`gpt-5.6-terra` / `gpt-5.6-luna`): Reserved for complex cyclic graph execution (OPS-004), DuckDB SQL dialect translation (OPS-002B), CLI terminal loops (OPS-009), and independent adversarial auditing.
 
-### Ticket-by-Ticket Model Allocation:
+### Ticket-by-Ticket Model Allocation (Hybrid FinOps Optimized):
 
-| Ticket / Milestone | Recommended Model | Reasoning Effort | Execution Engine | Est. Quota Cost | L8 Architectural Rationale |
-|---|---|:---:|:---:|:---:|---|
-| **OPS-001** (Scaffolding, Pydantic, Backoff) | `gpt-6-luna` | `medium` | Codex CLI | ~2% | Boilerplate determinístico: Pydantic BaseSettings, `.env.example`, `resilience.py` decorator e `conftest.py`. Rápido e ultra econômico. |
-| **OPS-002A** (BigQuery Live Client & Cache) | `gpt-5.6-terra` | `medium` | Codex CLI | ~4% | Introspecção do `INFORMATION_SCHEMA`, TTL cache em memória e sanitizador de tabelas. |
-| **OPS-002B** (DuckDB Mock & Dialect Adapter) | `gpt-5.6-terra` | `high` | Codex CLI | ~6% | Requer regex adapter para traduzir GoogleSQL (`TIMESTAMP_SUB`, `DATE_TRUNC`, `SAFE_DIVIDE`, backticks) para DuckDB e gerar fixtures de 50+ rows. |
-| **OPS-003** (AgentState, Prompts & SQL Gen) | `gpt-5.6-terra` | `high` | Codex CLI | ~6% | Modelagem de TypedDict, strip determinístico de code fences e regras ontológicas ONT-001 (Net Revenue, Churn). |
-| **OPS-004** (Execution, Self-Correction & Graph) | `gpt-5.6-luna` | `high` | Codex CLI | ~10% | O grafo LangGraph é o núcleo do sistema: Intent Router condicional, reflection loop de auto-cura, circuit breaker ($\le 2$) e diagnóstico de 0-rows. Luna possui raciocínio superior para fluxos cíclicos de controle. |
-| **OPS-005** (Executive Synthesizer Node) | `gpt-5.6-terra` | `medium` | Codex CLI | ~5% | Síntese executiva formatada em 3 seções H2 para Sarah (CEO), PII-safe consumindo `sanitized_results`. |
-| **OPS-006** (Enterprise PII & Brand Scoping) | `gpt-6-luna` | `high` | Codex CLI | ~4% | Implementação in-process com regex e Presidio (sem downloads pesados de spaCy) e scoping condicional de marcas. |
-| **OPS-007** (SQLite Reports & HITL Interrupt) | `gpt-5.6-terra` | `medium` | Codex CLI | ~5% | Persistência SQLite (`reports.db`), `MemorySaver` com session `thread_id` UUID e `interrupt()` para exclusão segura. |
-| **OPS-008** (OTel GenAI Tracing & Token Tracker) | `gpt-6-luna` | `medium` | Codex CLI | ~3% | Spans CNCF `gen_ai.*`, tracking de latência e orçamento de 2–5 chamadas LLM. |
-| **OPS-009** (Rich CLI & Application Entrypoint) | `gpt-5.6-terra` | `medium` | Codex CLI | ~6% | Terminal Rich, spinners, tabelas auto-truncadas, flags `--dry-run` e loop de chat com HITL. |
-| **OPS-010 Part A** (Production HLD Document) | **Gemini 3.8 Flash (High)** | Deep Context | **Antigravity** | **0% Codex** | Antigravity gera o `docs/HLD.md` completo com os diagramas Mermaid C4 diretamente. Zero gasto de quota no Codex! |
-| **OPS-010 Part B** (`scripts/verify_batteries.py`) | `gpt-5.6-terra` | `medium` | Codex CLI | ~5% | Script automatizado que roda os testes das 20 baterias (TB-01 a TB-17) e valida os checklists (TB-18 a TB-20). |
-| **Adversarial Final Audit** (3x Verification) | `gpt-5.6-luna` | `high` | Codex CLI | ~8% | Auditoria final simulando avaliador cego com injeções maliciosas e verificação de integridade de links. |
-| **TOTAL ESTIMADO** | | | | **~59%** (de 81%) | **Margem de Segurança: ~22% de folga** para correções. |
+| Ticket / Milestone | Priority 1 Model | Execution Engine | Codex Quota | Alternative (Codex Only) | L8 Architectural Rationale |
+|---|---|:---:|:---:|---|---|
+| **OPS-001** (Scaffolding, Pydantic, Backoff) | **Gemini 3.8 Flash (High)** | **Antigravity** | **0%** | `gpt-6-luna` (`medium`) | Boilerplate determinístico: Pydantic `BaseSettings`, `.env.example`, `resilience.py` decorator e `conftest.py`. Gemini 3.8 Flash executa instantaneamente com zero custo de quota. |
+| **OPS-002A** (BigQuery Live Client & Cache) | **Gemini 3.8 Flash (High)** | **Antigravity** | **0%** | `gpt-5.6-terra` (`medium`) | Introspecção do `INFORMATION_SCHEMA`, TTL cache em memória e sanitizador de tabelas. |
+| **OPS-002B** (DuckDB Mock & Dialect Adapter) | **`gpt-5.6-terra`** | **Codex CLI** | **~6%** | `gpt-5.6-terra` (`high`) | Requer regex adapter para traduzir GoogleSQL (`TIMESTAMP_SUB`, `DATE_TRUNC`, `SAFE_DIVIDE`, backticks) para DuckDB e gerar fixtures de 50+ rows. |
+| **OPS-003** (AgentState, Prompts & SQL Gen) | **Gemini 3.8 Flash (High)** | **Antigravity** | **0%** | `gpt-5.6-terra` (`high`) | Modelagem de TypedDict, prompts de sistema, strip de code fences e regras ontológicas ONT-001 (Net Revenue, Churn). |
+| **OPS-004** (Execution, Self-Correction & Graph) | **`gpt-5.6-luna`** | **Codex CLI** | **~10%** | `gpt-5.6-luna` (`high`) | O grafo LangGraph é o núcleo do sistema: Intent Router condicional, reflection loop de auto-cura, circuit breaker ($\le 2$) e diagnóstico de 0-rows. Luna tem raciocínio superior para fluxos cíclicos de controle. |
+| **OPS-005** (Executive Synthesizer Node) | **Gemini 3.8 Flash (High)** | **Antigravity** | **0%** | `gpt-5.6-terra` (`medium`) | Síntese executiva formatada em 3 seções H2 para Sarah (CEO), PII-safe consumindo `sanitized_results`. Gemini Flash brilha em formatação executiva. |
+| **OPS-006** (Enterprise PII & Brand Scoping) | **Gemini 3.8 Flash (High)** | **Antigravity** | **0%** | `gpt-6-luna` (`high`) | Implementação in-process com regex e Presidio (sem downloads pesados de spaCy) e scoping condicional de marcas. |
+| **OPS-007** (SQLite Reports & HITL Interrupt) | **`gpt-5.6-terra`** | **Codex CLI** | **~5%** | `gpt-5.6-terra` (`medium`) | Persistência SQLite (`reports.db`), `MemorySaver` com session `thread_id` UUID e `interrupt()` para exclusão segura. |
+| **OPS-008** (OTel GenAI Tracing & Token Tracker) | **Gemini 3.8 Flash (High)** | **Antigravity** | **0%** | `gpt-6-luna` (`medium`) | Spans CNCF `gen_ai.*`, tracking de latência e orçamento de 2–5 chamadas LLM. Padrão OTel determinístico. |
+| **OPS-009** (Rich CLI & Application Entrypoint) | **`gpt-5.6-terra`** | **Codex CLI** | **~6%** | `gpt-5.6-terra` (`medium`) | Terminal Rich, spinners, tabelas auto-truncadas, flags `--dry-run` e loop de chat com HITL. |
+| **OPS-010 Part A** (Production HLD Document) | **Gemini 3.8 Flash (High)** | **Antigravity** | **0%** | Gemini 3.8 Flash | Antigravity gera o `docs/HLD.md` completo com os diagramas Mermaid C4 diretamente. Zero gasto de quota no Codex! |
+| **OPS-010 Part B** (`scripts/verify_batteries.py`) | **Gemini 3.8 Flash (High)** | **Antigravity** | **0%** | `gpt-5.6-terra` (`medium`) | Script automatizado que roda os testes das 20 baterias (TB-01 a TB-17) e valida os checklists (TB-18 a TB-20). |
+| **Adversarial Final Audit** (3x Verification) | **`gpt-5.6-luna`** | **Codex CLI** | **~8%** | `gpt-5.6-luna` (`high`) | Auditoria cega simulando avaliador externo com injeções maliciosas, validando o código produzido em conjunto. |
+| **TOTAL ESTIMADO (CODEX)** | | | **~35%** | ~59% | **Margem de Segurança no Codex: ~46% de folga** (economizando ~24% de quota adicional ao priorizar o Gemini 3.8 Flash)! |
 
 ---
 
