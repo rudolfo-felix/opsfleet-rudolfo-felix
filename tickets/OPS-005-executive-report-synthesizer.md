@@ -1,5 +1,5 @@
 ## OPS-005: Executive Insight & Action Item Synthesizer Node
-Status: backlog  
+Status: done  
 Branch: feat/OPS-005-report-synthesizer  
 Priority: High  
 

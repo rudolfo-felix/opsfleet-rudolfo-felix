@@ -1,0 +1,30 @@
+=== OPS-005 Executive Report Synthesizer Live Demonstration ===
+
+1. Input Data with Potential PII:
+   - Raw row sample: {'customer_name': 'John Doe', 'email': 'john.doe@example.com', 'category': 'Outerwear', 'net_revenue': 18500.0, 'gross_margin_pct': 46.2}
+   - Scrubbed row sample: {'customer_name': 'John Doe', 'email': '[EMAIL_REDACTED]', 'category': 'Outerwear', 'net_revenue': 18500.0, 'gross_margin_pct': 46.2}
+   - Customer email scrubbed: [EMAIL_REDACTED]
+
+2. Generated Strategic Briefing for Sarah (CEO):
+## Executive Summary
+Q1 demonstrated solid top-line performance with Outerwear and Jeans generating over ,700 in combined Net Revenue at healthy 42-46% gross margins.
+
+## Key Findings
+| Category | Net Revenue (USD) | Gross Margin % |
+|---|---|---|
+| Outerwear | ,500.00 | 46.2% |
+| Jeans | ,200.00 | 42.8% |
+
+- Outerwear generated the strongest unit margins (+3.4pp above portfolio average).
+- Customer demographic penetration in California and Texas remained resilient.
+
+## Q2 Action Items
+1. Protect Outerwear supply chain lead times ahead of Fall re-stocking.
+2. Launch a cross-category bundling promotion combining Jeans with high-margin Accessories.
+3. Review regional inventory allocations in fulfillment centers 2 and 4.
+
+3. Telemetry & FinOps Tracking:
+   - Updated Total LLM Calls: 2 (Incremented by exactly 1)
+   - Updated Tokens Consumed: 375
+
+=== OPS-005 Executive Report Synthesizer Verified ===

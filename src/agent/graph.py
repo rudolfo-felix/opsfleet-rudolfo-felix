@@ -14,6 +14,7 @@ from src.agent.nodes.circuit_breaker import circuit_breaker
 from src.agent.nodes.execute_sql import execute_sql
 from src.agent.nodes.generate_sql import generate_sql
 from src.agent.nodes.self_correct import self_correct
+from src.agent.nodes.synthesize import synthesize
 from src.agent.state import AgentState
 
 logger = logging.getLogger(__name__)
@@ -52,17 +53,6 @@ def evaluate_execution(state: AgentState) -> str:
     return "synthesize"
 
 
-# Lightweight stubs for downstream tickets to allow graph compilation and hermetic testing
-def synthesize_node(state: AgentState) -> dict[str, Any]:
-    """Stub for executive report synthesis (to be fully implemented in OPS-005)."""
-    results = state.get("query_results") or []
-    if state.get("executive_report"):
-        return {}
-
-    summary = f"Query executed successfully with {len(results)} rows returned."
-    return {"executive_report": summary}
-
-
 def reports_node(state: AgentState) -> dict[str, Any]:
     """Stub for report management and HITL oversight (to be implemented in OPS-007)."""
     return {
@@ -93,7 +83,7 @@ def create_retail_agent_graph(checkpointer: Any | None = None) -> Any:
     workflow.add_node("execute_sql", execute_sql)
     workflow.add_node("self_correct", self_correct)
     workflow.add_node("circuit_breaker", circuit_breaker)
-    workflow.add_node("synthesize", synthesize_node)
+    workflow.add_node("synthesize", synthesize)
     workflow.add_node("reports", reports_node)
     workflow.add_node("help", help_node)
 
