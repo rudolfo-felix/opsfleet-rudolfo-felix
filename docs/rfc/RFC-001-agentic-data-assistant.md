@@ -49,6 +49,7 @@ The agent is modeled as a state machine governed by typed state transitions:
 ```python
 from typing import TypedDict, List, Dict, Any, Optional
 
+
 class AgentState(TypedDict):
     user_query: str
     user_id: str

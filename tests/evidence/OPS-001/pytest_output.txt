@@ -1,0 +1,25 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.11.15, pytest-9.1.1, pluggy-1.7.0 -- /Users/rudy/Documents/opsfleet-rudolfo-felix/.venv/bin/python3.11
+cachedir: .pytest_cache
+rootdir: /Users/rudy/Documents/opsfleet-rudolfo-felix
+configfile: pyproject.toml
+testpaths: tests
+plugins: langsmith-0.14.11, asyncio-1.4.0, anyio-4.15.1
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 13 items
+
+tests/test_config.py::test_valid_settings_loading PASSED                 [  7%]
+tests/test_config.py::test_missing_gemini_api_key_raises_friendly_error PASSED [ 15%]
+tests/test_config.py::test_placeholder_gemini_api_key_raises_friendly_error PASSED [ 23%]
+tests/test_config.py::test_configurable_model_family PASSED              [ 30%]
+tests/test_config.py::test_retired_model_rejected PASSED                 [ 38%]
+tests/test_config.py::test_pro_model_rejected PASSED                     [ 46%]
+tests/test_config.py::test_finops_budget_bounds PASSED                   [ 53%]
+tests/test_resilience.py::test_is_rate_limit_error_detection PASSED      [ 61%]
+tests/test_resilience.py::test_calculate_backoff_delay PASSED            [ 69%]
+tests/test_resilience.py::test_retry_success_after_rate_limit PASSED     [ 76%]
+tests/test_resilience.py::test_retry_exhausted_raises_exception PASSED   [ 84%]
+tests/test_resilience.py::test_non_retryable_error_raises_immediately PASSED [ 92%]
+tests/test_resilience.py::test_async_retry_with_backoff PASSED           [100%]
+
+============================== 13 passed in 0.05s ==============================
