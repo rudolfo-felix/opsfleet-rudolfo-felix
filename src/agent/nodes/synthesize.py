@@ -21,6 +21,7 @@ from src.guardrails.pii import (
     sanitize_records,
     sanitize_text,
 )
+from src.telemetry.tracer import trace_node
 
 logger = logging.getLogger(__name__)
 
@@ -84,6 +85,7 @@ def _invoke_synthesis_model(
     return _call()
 
 
+@trace_node("synthesize")
 def synthesize(
     state: AgentState,
     client: Any | None = None,

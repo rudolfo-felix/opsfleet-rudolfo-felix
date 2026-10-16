@@ -20,6 +20,7 @@ from src.agent.state import AgentState
 from src.bq.schema import sanitize_table_qualification
 from src.config import Settings, get_settings
 from src.guardrails.scope import apply_brand_scoping
+from src.telemetry.tracer import trace_node
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +48,7 @@ def _invoke_gemini_model(
     return _call()
 
 
+@trace_node("generate_sql")
 def generate_sql(
     state: AgentState,
     client: Any | None = None,

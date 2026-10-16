@@ -18,6 +18,7 @@ from src.storage.reports import (
     list_reports,
     save_report,
 )
+from src.telemetry.tracer import trace_node
 
 logger = logging.getLogger(__name__)
 
@@ -85,6 +86,7 @@ def format_reports_table(reports: list[dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
+@trace_node("reports")
 def reports_node(state: AgentState) -> dict[str, Any]:
     """LangGraph node: manage report lifecycle with EU AI Act Article 14 HITL oversight."""
     user_query = state.get("user_query", "").strip()

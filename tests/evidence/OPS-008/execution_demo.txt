@@ -1,0 +1,44 @@
+=== OPS-008 DEMO: OPENTELEMETRY GENAI TRACING & FINOPS ACCOUNTING ===
+
+1. Total Emitted Spans Captured in Memory: 4
+   - Span Name: gemini.generate_sql       Status: OK      Duration: 0.0146s
+   - Span Name: agent.execute_sql         Status: OK      Duration: 0.0121s
+   - Span Name: agent.sanitize_pii        Status: OK      Duration: 0.0039s
+   - Span Name: gemini.synthesize         Status: OK      Duration: 0.0202s
+
+2. CNCF OpenTelemetry GenAI Semantic Conventions Validation (First LLM Span):
+   • customer_email                 = [EMAIL_REDACTED]
+   • gen_ai.operation.name          = generate_content
+   • gen_ai.request.model           = gemini-2.5-flash
+   • gen_ai.response.model          = gemini-2.5-flash
+   • gen_ai.system                  = gemini
+   • gen_ai.usage.completion_tokens = 62
+   • gen_ai.usage.input_tokens      = 185
+   • gen_ai.usage.output_tokens     = 62
+   • gen_ai.usage.prompt_tokens     = 185
+   • gen_ai.usage.total_tokens      = 247
+
+3. Defensive PII Redaction Verification in Span Metadata:
+   • Raw input: customer_email="sarah@retail.com" -> Emitted: "[EMAIL_REDACTED]"
+   • Raw input: user_name="Sarah CEO"           -> Emitted: "[NAME_REDACTED]"
+
+4. Vlad Bondarenko FinOps Call Budget & Token Accounting:
+   • FinOps Status: VALID [PASS]
+   • Directive Assertion: Turn call budget respected: 2 calls (budget: 2-5).
+   • Turn Summary Payload:
+{
+      "user_id": "exec_sarah",
+      "session_id": "turn_402_q1_margins",
+      "query_type": "analytical",
+      "total_llm_calls": 2,
+      "prompt_tokens": 495,
+      "completion_tokens": 202,
+      "total_tokens": 697,
+      "cumulative_latency_sec": 0.0508,
+      "node_latencies": {
+            "gemini.generate_sql": 0.0146,
+            "execute_sql": 0.0121,
+            "sanitize_pii": 0.0039,
+            "gemini.synthesize": 0.0202
+      }
+}

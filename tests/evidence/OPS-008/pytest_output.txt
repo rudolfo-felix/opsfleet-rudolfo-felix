@@ -1,0 +1,17 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.11.15, pytest-9.1.1, pluggy-1.7.0 -- /Users/rudy/Documents/opsfleet-rudolfo-felix/.venv/bin/python3.11
+cachedir: .pytest_cache
+rootdir: /Users/rudy/Documents/opsfleet-rudolfo-felix
+configfile: pyproject.toml
+plugins: langsmith-0.14.11, asyncio-1.4.0, anyio-4.15.1
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 6 items
+
+tests/test_telemetry.py::test_tracer_span_creation_and_genai_semantic_conventions PASSED [ 16%]
+tests/test_telemetry.py::test_pii_sanitization_in_span_attributes PASSED [ 33%]
+tests/test_telemetry.py::test_trace_node_decorator_success_and_error PASSED [ 50%]
+tests/test_telemetry.py::test_finops_budget_tracker_enforcement PASSED   [ 66%]
+tests/test_telemetry.py::test_finops_summary_dictionary_generation PASSED [ 83%]
+tests/test_telemetry.py::test_langgraph_pipeline_emits_telemetry_spans PASSED [100%]
+
+============================== 6 passed in 1.26s ===============================

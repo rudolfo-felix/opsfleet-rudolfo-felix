@@ -11,6 +11,7 @@ from src.agent.state import AgentState
 from src.bq.client import get_bigquery_client
 from src.bq.exceptions import BigQueryClientError, ReadOnlyQueryViolationError
 from src.guardrails.scope import apply_brand_scoping
+from src.telemetry.tracer import trace_node
 
 logger = logging.getLogger(__name__)
 
@@ -24,6 +25,7 @@ ZERO_ROWS_DIAGNOSTIC = (
 )
 
 
+@trace_node("execute_sql")
 def execute_sql(
     state: AgentState,
     client: Any | None = None,

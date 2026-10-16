@@ -1,5 +1,5 @@
 ## OPS-008: OpenTelemetry GenAI Telemetry & Token Accounting
-Status: backlog  
+Status: done  
 Branch: feat/OPS-008-otel-telemetry  
 Priority: Medium  
 
