@@ -49,6 +49,7 @@ Before writing any code or modifying documentation, you MUST read the following 
 11. **Self-Correction Cap:** SQL retry loop is strictly capped at $\le 2$ attempts to prevent infinite loops and quota drain.
 12. **Evidence-Based Verification Gate (No-Mistakes Protocol):** Autonomous agents must persist concrete execution evidence (pytest execution outputs, mock query results, PII-scrubbed samples) to `tests/evidence/` for every ticket before completion.
 13. **Zero Dev-Cost Bias (Enterprise Quality Bar):** Autonomous coding agents must never sacrifice architectural robustness (typed Pydantic schemas, explicit error hierarchies, resilience decorators) under the assumption that enterprise patterns take too long. Quality and resilience are non-negotiable.
+14. **Autonomous Swarm Review & Auto-Progression Gate:** Every ticket requires an atomic RFC (`RFC-OPS-XXX.md`) audited and approved by independent subagent Reviewer 1 (and Reviewer 2 if confidence < 90% or ticket is Critical: OPS-004, OPS-006, OPS-010 per [`docs/architecture/AUTONOMOUS_SWARM_PROTOCOL.md`](docs/architecture/AUTONOMOUS_SWARM_PROTOCOL.md)). Upon code completion and pytest passing, an independent QA/PO subagent issues `docs/qa/QA_REVIEW_OPS-XXX.md`. Once cleared, the agent automatically commits, merges to main, pushes, and advances to the next ticket in the DAG without waiting for manual human intervention.
 
 ---
 
