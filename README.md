@@ -183,8 +183,8 @@ Every component is validated across a **Triple Verification Protocol** (Pass 1: 
 * 🏛️ **[Retail Domain Ontology & Ubiquitous Language (DDD)](docs/architecture/01_BUSINESS_ONTOLOGY_AND_UBIQUITOUS_LANGUAGE.md):** Canonical entities (`Customer`, `Order`, `Product`), metric calculation rules, and master acronyms glossary eliminating Text-to-SQL semantic ambiguity.
 * 🏛️ **[Architecture Decision Records (ADRs)](docs/adr/README.md):** MADR-standard decision logs (ADR 0001 through 0007) capturing trade-offs, consequences, and design choices.
 * 📑 **[Master Execution Plan & Checklist](docs/MASTER_PLAN.md):** Operational blueprint, verbatim Slack Q&A alignment with Harry (AI PM) & Vlad (AI Tech Lead), and regulatory mapping.
-* 🏛️ **[L8 Principal Engineer Audit Report](docs/architecture/L8_PRINCIPAL_AUDIT_REPORT.md):** Independent Staff/Principal architectural audit (96.25% readiness score).
-* 🛡️ **[Model Allocation & Failure Resilience](docs/architecture/09_MODEL_ALLOCATION_AND_FAILURE_RESILIENCE.md):** Token allocation matrix, enterprise failure resilience patterns, and Master Genesis Prompt.
+* 🛡️ **[Model Allocation & Failure Resilience](docs/architecture/09_MODEL_ALLOCATION_AND_FAILURE_RESILIENCE.md):** Token allocation matrix and enterprise failure resilience patterns.
+* 📜 **[Genesis & Prompt Orchestration Log](docs/templates/GENESIS_SETUP_PROMPT.md):** Complete four-stage prompt lifecycle, autonomous swarm trigger prompt, critical human steering prompt, and multi-model OpenAI Codex review log.
 * 💰 **FinOps & Dependency Strategy:** Explicit **Free/OSS-first evaluation stack** (100% runnable at $0.00 cost) vs. Scalable Enterprise Cloud Trade-offs (Langfuse vs. LangSmith, SQLite vs CloudSQL, Presidio vs Cloud DLP).
 * 🛡️ **Regulatory & Standards Alignment:** Comprehensive mapping of safety, HITL oversight, and risk controls to the **EU AI Act (Article 14)** and **NIST AI RMF (NIST AI 600-1)**.
 * 📚 **Architectural Foundations & Reference Whitepapers:**

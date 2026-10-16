@@ -15,6 +15,7 @@ This documentation suite follows enterprise architecture standards (C4 Model, MA
 
 2. Operational Strategy & Alignment:
    └── docs/MASTER_PLAN.md                  ──> Master Plan, Slack Q&A with Harry & Vlad, FinOps
+   └── docs/templates/GENESIS_SETUP_PROMPT.md ──> Genesis & Autonomous Swarm Prompt Orchestration Log
 
 3. Engineering Design & Proposed Solution:
    └── docs/rfc/RFC-001-agentic-data-assistant.md ──> Technical Specification & StateGraph Design
@@ -48,6 +49,7 @@ This documentation suite follows enterprise architecture standards (C4 Model, MA
 | **[`architecture/`](./architecture/01_BUSINESS_ONTOLOGY_AND_UBIQUITOUS_LANGUAGE.md)** | Domain-Driven Design (DDD) Business Ontology, Ubiquitous Language, and Master Acronyms. | Enterprise Architects, Data Engineers |
 | **[`adr/`](./adr/README.md)** | Architecture Decision Records (MADR standard) documenting irreversible technical choices and trade-offs. | Technical Leads, Staff Architects |
 | **[`MASTER_PLAN.md`](./MASTER_PLAN.md)** | Complete operational master plan, Slack transcripts, regulatory compliance, and FinOps comparison. | Hiring Committee, Project Managers |
+| **[`templates/`](./templates/GENESIS_SETUP_PROMPT.md)** | Genesis Prompt, Autonomous Swarm Orchestration Log & Multi-Model Codex Review. | AI Evaluators, System Architects |
 | **[`assets/`](./assets/)** | Original client PDFs, role specifications, and the LangChain enterprise whitepaper. | Archival & Compliance Reference |
 
 ---
