@@ -1,5 +1,5 @@
 ## OPS-003: LangGraph State Schema & GoogleSQL Generation Node
-Status: backlog  
+Status: done  
 Branch: feat/OPS-003-state-sql-gen  
 Priority: Critical  
 

@@ -1,0 +1,28 @@
+=== OPS-003 LangGraph State Schema & SQL Generation Demo ===
+
+1. Initializing Pristine AgentState:
+   - User ID: sarah_ceo
+   - Allowed Brands: ['Calvin Klein', 'Tommy Hilfiger']
+   - Total LLM Calls: 0
+   - Downstream keys pre-allocated: requires_confirmation=False, executive_report=None
+
+2. System Prompt Generation (DDD Ontology & Brand Scoping):
+   - Ontology snippet: "status NOT IN ('Cancelled', 'Returned')" present: True
+   - Brand Scoping snippet: Calvin Klein present: True
+
+3. Executing generate_sql Node:
+   - Generated SQL (fences stripped, tables qualified):
+     SELECT 
+    p.category,
+    ROUND(SUM(oi.sale_price), 2) AS net_revenue
+FROM `bigquery-public-data.thelook_ecommerce.ord...
+   - Total LLM Calls: 1
+   - Tokens Consumed: 185
+   - SQL History Length: 1
+
+4. Simulating Self-Correction Turn:
+   - Updated Total LLM Calls: 2 (Budget enforced: <= 5)
+   - Updated Tokens Consumed: 295
+   - SQL History Iterations: 2
+
+=== OPS-003 State Schema & Generation Node Verified ===

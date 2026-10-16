@@ -71,6 +71,8 @@ def calculate_backoff_delay(
 
 
 def retry_with_backoff(
+    func: Callable | None = None,
+    *,
     max_retries: int = 3,
     initial_delay: float = 1.0,
     factor: float = 2.0,
@@ -81,7 +83,10 @@ def retry_with_backoff(
 ):
     """Decorator to retry functions failing due to HTTP 429 / RESOURCE_EXHAUSTED.
 
+    Supports both bare @retry_with_backoff and parameterized @retry_with_backoff(max_retries=5).
+
     Args:
+        func: Optional function when used as bare decorator @retry_with_backoff.
         max_retries: Number of retry attempts before giving up (default: 3).
         initial_delay: Initial delay in seconds (default: 1.0s).
         factor: Multiplicative factor for exponential backoff (default: 2.0).
@@ -91,13 +96,13 @@ def retry_with_backoff(
         on_retry: Optional hook callable(attempt, delay, exception) invoked on each retry.
     """
 
-    def decorator(func: Callable):
-        @wraps(func)
+    def decorator(fn: Callable):
+        @wraps(fn)
         def sync_wrapper(*args, **kwargs) -> Any:
             attempt = 0
             while True:
                 try:
-                    return func(*args, **kwargs)
+                    return fn(*args, **kwargs)
                 except Exception as exc:
                     # Check if error qualifies as rate limit
                     is_retryable = False
@@ -109,7 +114,7 @@ def retry_with_backoff(
                     if not is_retryable or attempt >= max_retries:
                         if is_retryable:
                             logger.error(
-                                f"Rate limit retry exhausted after {attempt} attempts for {func.__name__}."
+                                f"Rate limit retry exhausted after {attempt} attempts for {fn.__name__}."
                             )
                         raise
 
@@ -137,14 +142,14 @@ def retry_with_backoff(
 
                     time.sleep(delay)
 
-        @wraps(func)
+        @wraps(fn)
         async def async_wrapper(*args, **kwargs) -> Any:
             import asyncio
 
             attempt = 0
             while True:
                 try:
-                    return await func(*args, **kwargs)
+                    return await fn(*args, **kwargs)
                 except Exception as exc:
                     is_retryable = False
                     if retryable_exceptions and isinstance(exc, retryable_exceptions):
@@ -155,7 +160,7 @@ def retry_with_backoff(
                     if not is_retryable or attempt >= max_retries:
                         if is_retryable:
                             logger.error(
-                                f"Rate limit retry exhausted after {attempt} attempts for {func.__name__}."
+                                f"Rate limit retry exhausted after {attempt} attempts for {fn.__name__}."
                             )
                         raise
 
@@ -182,8 +187,10 @@ def retry_with_backoff(
 
                     await asyncio.sleep(delay)
 
-        if inspect.iscoroutinefunction(func):
+        if inspect.iscoroutinefunction(fn):
             return async_wrapper
         return sync_wrapper
 
+    if func is not None:
+        return decorator(func)
     return decorator
