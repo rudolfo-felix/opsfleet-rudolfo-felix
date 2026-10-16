@@ -142,6 +142,9 @@ def translate_googlesql_to_duckdb(sql: str) -> str:
         translated,
     )
 
+    # 10. TIMESTAMP('...') -> TIMESTAMP '...'
+    translated = re.sub(r"(?i)\bTIMESTAMP\s*\(\s*('[^']+')\s*\)", r"TIMESTAMP \1", translated)
+
     return translated
 
 
