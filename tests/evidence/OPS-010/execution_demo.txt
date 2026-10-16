@@ -1,0 +1,40 @@
+⚠️ Google Cloud credentials not found (Google Cloud Application Default 
+Credentials (ADC) missing or invalid: Your default credentials were not found. 
+To set up Application Default Credentials, see 
+https://cloud.google.com/docs/authentication/external/set-up-adc for more 
+information.. Use MockBigQueryEngine or configure gcloud auth 
+application-default login.).
+➡️ Gracefully falling back to in-memory DuckDB engine with synthetic 
+thelook_ecommerce data.
+╭─────────────────────── TheLook eCommerce AI Assistant ───────────────────────╮
+│                                                                              │
+│  🛍️  THELOOK RETAIL ANALYTICS AI ASSISTANT                                   │
+│  Executive Data Intelligence & Governance Platform                           │
+│                                                                              │
+│  • Model Family:    gemini-2.5-flash                                         │
+│  • Data Warehouse:  DuckDB (In-Memory Mock Fallback)                         │
+│  • Active Persona:  sarah_ceo                                                │
+│  • Scoped Brands:   All Brands (Unrestricted)                                │
+│                                                                              │
+│  Commercial Capabilities & Prompts:                                          │
+│    • Net Revenue:     *'What was our Net Revenue by category last            │
+│  quarter?'*                                                                  │
+│    • Brand Margins:   *'Which brands have our highest gross margins?'*       │
+│    • Customer Churn:  *'How many customers churned over the last 90 days?'*  │
+│    • Report Mgmt:     *'Show saved reports'*, *'Save report'*, *'Delete      │
+│  report #2'*                                                                 │
+│    • Session Exit:    Type *'exit'*, *'quit'*, or press Ctrl+C to close.     │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+              ✓ Pre-flight System Verification Matrix               
+┏━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Component        ┃ Status ┃ Details                              ┃
+┡━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Configuration    │  PASS  │ Model: gemini-2.5-flash              │
+│ Data Warehouse   │  PASS  │ DuckDB (In-Memory Mock Fallback)     │
+│ Schema Inspector │  PASS  │ 4 Core Tables Verified               │
+│ LangGraph Engine │  PASS  │ StateGraph Compiled with MemorySaver │
+└──────────────────┴────────┴──────────────────────────────────────┘
+
+✓ Pre-flight checks passed successfully. System ready for live evaluation.
+

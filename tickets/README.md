@@ -16,11 +16,11 @@ Every commit and feature branch maps directly to an atomic ticket ID (`OPS-XXX`)
 | **[OPS-003](./OPS-003-langgraph-state-and-sql-generator.md)** | LangGraph State Schema & GoogleSQL Generation Node | `done` | `feat/OPS-003-state-sql-gen` | Critical |
 | **[OPS-004](./OPS-004-sql-execution-and-self-correction.md)** | Execution Node, Self-Correction Loop & FinOps Circuit Breaker | `done` | `feat/OPS-004-execution-self-correction` | Critical |
 | **[OPS-005](./OPS-005-executive-report-synthesizer.md)** | Executive Insight & Action Item Synthesizer Node | `done` | `feat/OPS-005-report-synthesizer` | High |
-| **[OPS-006](./OPS-006-enterprise-pii-and-brand-scoping.md)** | Enterprise PII Sanitizer Gate & User Brand Scoping | `backlog` | `feat/OPS-006-pii-scoping-guardrails` | Critical |
-| **[OPS-007](./OPS-007-saved-reports-and-hitl-interrupt.md)** | Saved Reports SQLite Storage & EU AI Act HITL Interrupt | `backlog` | `feat/OPS-007-reports-hitl` | High |
-| **[OPS-008](./OPS-008-opentelemetry-genai-tracing.md)** | OpenTelemetry GenAI Telemetry & Token Accounting | `backlog` | `feat/OPS-008-otel-telemetry` | Medium |
-| **[OPS-009](./OPS-009-rich-cli-interface-and-main.md)** | Rich Interactive CLI Interface & Application Entrypoint (`main.py`) | `backlog` | `feat/OPS-009-rich-cli-main` | High |
-| **[OPS-010](./OPS-010-production-hld-and-20-battery-runner.md)** | Production HLD Document, 20-Battery Test Runner & Delivery Gate | `backlog` | `feat/OPS-010-production-hld-eval` | Critical |
+| **[OPS-006](./OPS-006-enterprise-pii-and-brand-scoping.md)** | Enterprise PII Sanitizer Gate & User Brand Scoping | `done` | `main` | Critical |
+| **[OPS-007](./OPS-007-saved-reports-and-hitl-interrupt.md)** | Saved Reports SQLite Storage & EU AI Act HITL Interrupt | `done` | `main` | High |
+| **[OPS-008](./OPS-008-opentelemetry-genai-tracing.md)** | OpenTelemetry GenAI Telemetry & Token Accounting | `done` | `main` | Medium |
+| **[OPS-009](./OPS-009-rich-cli-interface-and-main.md)** | Rich Interactive CLI Interface & Application Entrypoint (`main.py`) | `done` | `main` | High |
+| **[OPS-010](./OPS-010-production-hld-and-20-battery-runner.md)** | Production HLD Document, 20-Battery Test Runner & Delivery Gate | `done` | `main` | Critical |
 
 ---
 

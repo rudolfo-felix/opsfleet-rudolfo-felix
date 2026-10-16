@@ -1,7 +1,7 @@
 # RFC: OPS-003 - LangGraph State Schema & GoogleSQL Generation Node
 
 **Related Ticket:** [OPS-003](../../tickets/OPS-003-langgraph-state-and-sql-generator.md)  
-**General Runbook:** [Ship Runbook](../roadmap/ship_v1_runbook.md)  
+**General Runbook:** [Autonomous Swarm Protocol](../architecture/AUTONOMOUS_SWARM_PROTOCOL.md)
 **Architectural References:** [ADR-0001](../adr/0001-adopt-langgraph-state-machine.md), [ADR-0007](../adr/0007-domain-driven-semantic-layer-for-text-to-sql.md), [ONT-001](../architecture/01_BUSINESS_ONTOLOGY_AND_UBIQUITOUS_LANGUAGE.md)
 
 ---

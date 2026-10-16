@@ -1,7 +1,7 @@
 # RFC: OPS-005 - Executive Insight & Action Item Synthesizer Node
 
 **Related Ticket:** [OPS-005](../../tickets/OPS-005-executive-report-synthesizer.md)  
-**General Runbook:** [Ship Runbook](../roadmap/ship_v1_runbook.md)  
+**General Runbook:** [Autonomous Swarm Protocol](../architecture/AUTONOMOUS_SWARM_PROTOCOL.md)
 **Architectural References:** [PRD-RETAIL-ASSISTANT.md](../prd/PRD-RETAIL-ASSISTANT.md) (FR-2, FR-6), [RFC-001](../rfc/RFC-001-agentic-data-assistant.md) §3.4, Invariant 4 (FinOps 2-5 Call Budget)
 
 ---

@@ -10,7 +10,7 @@
 
 ## 1. Executive Summary
 
-A formal, independent architectural and functional audit was performed on ticket **OPS-007** against the ticket specification (`tickets/OPS-007-saved-reports-and-hitl-interrupt.md`), technical design (`docs/rfc/RFC-OPS-007-saved-reports-and-hitl-interrupt.md`), architectural decision records ([ADR-0004](docs/adr/0004-sqlite-local-storage-vs-cloudsql.md)), and governance invariants.
+A formal, independent architectural and functional audit was performed on ticket **OPS-007** against the ticket specification (`tickets/OPS-007-saved-reports-and-hitl-interrupt.md`), technical design (`docs/rfc/RFC-OPS-007-saved-reports-and-hitl-interrupt.md`), architectural decision records ([ADR-0004](../adr/0004-sqlite-local-storage-vs-cloudsql.md)), and governance invariants.
 
 Ticket OPS-007 delivers two core capabilities to TheLook Retail Analytics Assistant:
 1. **Persistent Local Report Storage Engine (`src/storage/reports.py`):** Relational persistence using standard-library `sqlite3` (`reports.db`), providing full CRUD operations, resilient schema initialization, and case-insensitive keyword filtering across executive briefing titles and content.

@@ -125,8 +125,8 @@ def translate_googlesql_to_duckdb(sql: str) -> str:
     # 7. COUNTIF -> COUNT_IF
     translated = re.sub(r"(?i)\bCOUNTIF\(", "COUNT_IF(", translated)
 
-    # 8. CURRENT_DATETIME() -> CURRENT_TIMESTAMP
-    translated = re.sub(r"(?i)\bCURRENT_DATETIME\(\)", "CURRENT_TIMESTAMP", translated)
+    # 8. CURRENT_DATETIME() / CURRENT_TIMESTAMP() -> CURRENT_TIMESTAMP
+    translated = re.sub(r"(?i)\bCURRENT_(?:DATETIME|TIMESTAMP)\(\)", "CURRENT_TIMESTAMP", translated)
 
     # 9. Double-quoted string literals in expressions: e.g. status = "Complete" -> status = 'Complete'
     # Match double quotes following comparison operators or IN (

@@ -1,7 +1,7 @@
 # RFC: OPS-007 - Saved Reports SQLite Storage & EU AI Act HITL Interrupt
 
 **Related Ticket:** [OPS-007](../../tickets/OPS-007-saved-reports-and-hitl-interrupt.md)  
-**General Runbook:** [Ship Runbook](../roadmap/ship_v1_runbook.md)  
+**General Runbook:** [Autonomous Swarm Protocol](../architecture/AUTONOMOUS_SWARM_PROTOCOL.md)
 **Architectural References:** [ADR-0004](../adr/0004-sqlite-local-storage-vs-cloudsql.md), Invariant 1 (2-Minute Rule), Invariant 10 (HITL Interrupt & MemorySaver Checkpointer), Mitigation 5 (MemorySaver Thread Tracking), [PRD-RETAIL-ASSISTANT.md](../prd/PRD-RETAIL-ASSISTANT.md) (FR-4)
 
 ---

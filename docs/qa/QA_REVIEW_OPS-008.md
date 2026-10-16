@@ -10,7 +10,7 @@
 
 ## 1. Executive Summary
 
-A formal, independent architectural, security, and quality audit was conducted on ticket **OPS-008** against the ticket specification (`tickets/OPS-008-opentelemetry-genai-tracing.md`), technical specification (`docs/rfc/RFC-OPS-008-opentelemetry-genai-tracing.md`), architectural decision records ([ADR-0002](docs/adr/0002-adopt-langfuse-oss-for-observability.md)), and project governance invariants.
+A formal, independent architectural, security, and quality audit was conducted on ticket **OPS-008** against the ticket specification (`tickets/OPS-008-opentelemetry-genai-tracing.md`), technical specification (`docs/rfc/RFC-OPS-008-opentelemetry-genai-tracing.md`), architectural decision records ([ADR-0002](../adr/0002-adopt-langfuse-oss-for-observability.md)), and project governance invariants.
 
 Ticket OPS-008 delivers enterprise observability and FinOps discipline to TheLook Retail Analytics Assistant:
 1. **CNCF OpenTelemetry GenAI Conventions Engine (`src/telemetry/tracer.py`):** Configures an OpenTelemetry `TracerProvider` with `InMemorySpanExporter` and provides `start_genai_span` context management emitting standard `gen_ai.*` attributes (`gen_ai.system="gemini"`, `gen_ai.request.model`, `gen_ai.response.model`, `gen_ai.operation.name`). Implements dual-key aliasing for token metrics (`prompt_tokens`/`input_tokens`, `completion_tokens`/`output_tokens`, `total_tokens`).

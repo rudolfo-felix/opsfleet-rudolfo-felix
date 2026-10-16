@@ -1,7 +1,7 @@
 # RFC: OPS-006 - Enterprise PII Sanitizer Gate & Multi-Tenant Brand Scoping
 
 **Related Ticket:** [OPS-006](../../tickets/OPS-006-enterprise-pii-and-brand-scoping.md)  
-**General Runbook:** [Ship Runbook](../roadmap/ship_v1_runbook.md)  
+**General Runbook:** [Autonomous Swarm Protocol](../architecture/AUTONOMOUS_SWARM_PROTOCOL.md)
 **Architectural References:** [ADR-0005](../adr/0005-presidio-pii-masking-vs-cloud-dlp.md), Mitigation 2 (Conditional Brand Scoping), Invariant 9 (PII Scrubbing Gate), [PRD-RETAIL-ASSISTANT.md](../prd/PRD-RETAIL-ASSISTANT.md) (FR-2, FR-3)
 
 ---

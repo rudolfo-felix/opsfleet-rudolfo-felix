@@ -1,7 +1,7 @@
 # RFC: OPS-002B - Offline Mock DuckDB Engine & Synthetic E-Commerce Fixtures
 
 **Related Ticket:** [OPS-002B](../../tickets/OPS-002B-offline-mock-duckdb-engine.md)  
-**General Runbook:** [Ship Runbook](../roadmap/ship_v1_runbook.md)  
+**General Runbook:** [Autonomous Swarm Protocol](../architecture/AUTONOMOUS_SWARM_PROTOCOL.md)
 **Architectural Invariant Reference:** Invariant 1 (2-Minute Evaluator Rule) & Invariant 5 (Dual BigQuery Strategy)
 
 ---

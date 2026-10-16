@@ -1,7 +1,7 @@
 # RFC: OPS-004 - SQL Execution Node, Self-Correction Reflection Loop & FinOps Circuit Breaker
 
 **Related Ticket:** [OPS-004](../../tickets/OPS-004-sql-execution-and-self-correction.md)  
-**General Runbook:** [Ship Runbook](../roadmap/ship_v1_runbook.md)  
+**General Runbook:** [Autonomous Swarm Protocol](../architecture/AUTONOMOUS_SWARM_PROTOCOL.md)
 **Architectural References:** [ADR-0001](../adr/0001-adopt-langgraph-state-machine.md), Invariant 4 (FinOps 2-5 Call Budget), Invariant 11 (Self-Correction Loop <= 2 Retries), Mitigation 3 (0-Rows Corrective Feedback)
 
 ---
