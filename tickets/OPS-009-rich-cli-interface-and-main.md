@@ -21,6 +21,7 @@ Deliver an intuitive, visually polished conversational experience for executive 
 2. Given execution steps, spinners provide real-time visual progress without terminal screen flickering.
 3. If Google AI Studio rate limits (HTTP 429) occur, a warning countdown is rendered cleanly without crashing or dumping tracebacks.
 4. If `GEMINI_API_KEY` is missing, `main.py` displays a formatted error panel with instructions on acquiring a free key from Google AI Studio.
+5. Given `--dry-run`, the CLI initializes, validates configuration, checks graph integrity, and exits cleanly (exit code 0) without calling live Gemini endpoints.
 
 ### Implementation & Architecture
 - 📄 **Related ADR:** [ADR-0006](../docs/adr/0006-configurable-gemini-flash-and-rate-limit-backoff.md)

@@ -10,15 +10,22 @@ Define the core `AgentState` schema using `typing.TypedDict` and implement the T
 Translate natural language executive questions into high-precision, standard GoogleSQL queries respecting retail calculation rules and temporal functions.
 
 ### Description
-- Implement `src/agent/state.py` defining `AgentState` (`user_query`, `allowed_brands`, `current_sql`, `sql_history`, `error_feedback`, `retry_count`, `query_results`, `total_llm_calls`, `tokens_consumed`).
+- Implement `src/agent/state.py` defining comprehensive `AgentState` TypedDict:
+  - Session & auth context: `user_query: str`, `user_id: str`, `session_id: str`, `allowed_brands: List[str]`.
+  - SQL generation & iteration: `current_sql: str`, `sql_history: List[str]`, `error_feedback: Optional[str]`, `retry_count: int`.
+  - Data results: `query_results: Optional[List[Dict[str, Any]]]`, `sanitized_results: Optional[List[Dict[str, Any]]]`.
+  - HITL oversight: `requires_confirmation: bool`, `confirmation_status: Optional[bool]`.
+  - Final briefing: `executive_report: Optional[str]`.
+  - FinOps telemetry: `total_llm_calls: int`, `tokens_consumed: int`.
 - Implement `src/agent/prompts.py` embedding schema context, retail business formulas (Net Revenue strictly excluding `Cancelled` and `Returned`), GoogleSQL date functions (`TIMESTAMP_SUB`), and 3 exemplar Golden Bucket Trios.
-- Implement `src/agent/nodes/generate_sql.py` invoking Gemini with the prompt, extracting clean SQL syntax, and populating `state["current_sql"]`.
+- Implement `src/agent/nodes/generate_sql.py` invoking Gemini with the prompt, strictly stripping markdown code fences (`removeprefix('```sql').removeprefix('```').removesuffix('```').strip()`), and populating `state["current_sql"]`.
 
 ### Acceptance Criteria
 1. Given natural language queries (e.g. *"What is our Net Revenue by category?"*), the generator produces valid GoogleSQL without markdown ticks or formatting noise.
-2. Generated SQL for revenue enforces `status NOT IN ('Cancelled', 'Returned')` per ONT-001.
-3. Generated SQL for churn calculates trailing 90-day inactivity using BigQuery temporal syntax.
-4. `total_llm_calls` is incremented accurately to enforce the 2–5 calls FinOps budget.
+2. `AgentState` schema includes `executive_report`, `sanitized_results`, `user_id`, `session_id`, `requires_confirmation`, and `confirmation_status` to prevent downstream state migrations.
+3. Generated SQL for revenue enforces `status NOT IN ('Cancelled', 'Returned')` per ONT-001.
+4. Generated SQL for churn calculates trailing 90-day inactivity using BigQuery temporal syntax (`TIMESTAMP_SUB`).
+5. `total_llm_calls` is incremented accurately to enforce the 2–5 calls FinOps budget.
 
 ### Implementation & Architecture
 - 📄 **Related ADR:** [ADR-0001](../docs/adr/0001-adopt-langgraph-state-machine.md) & [ADR-0007](../docs/adr/0007-domain-driven-semantic-layer-for-text-to-sql.md)

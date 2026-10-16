@@ -47,6 +47,8 @@ Before writing any code or modifying documentation, you MUST read the following 
 9. **Enterprise PII Redaction:** Scrub all sensitive fields (`email`, `first_name`, `last_name`, `ip_address`) from terminal display and synthesized reports.
 10. **High-Stakes Oversight with Checkpointer (Mitigation 5):** Destructive actions (e.g. deleting saved reports) halt graph execution via LangGraph `MemorySaver` `interrupt()` and require explicit human confirmation (`[y/N]`) before committing.
 11. **Self-Correction Cap:** SQL retry loop is strictly capped at $\le 2$ attempts to prevent infinite loops and quota drain.
+12. **Evidence-Based Verification Gate (No-Mistakes Protocol):** Autonomous agents must persist concrete execution evidence (pytest execution outputs, mock query results, PII-scrubbed samples) to `tests/evidence/` for every ticket before completion.
+13. **Zero Dev-Cost Bias (Enterprise Quality Bar):** Autonomous coding agents must never sacrifice architectural robustness (typed Pydantic schemas, explicit error hierarchies, resilience decorators) under the assumption that enterprise patterns take too long. Quality and resilience are non-negotiable.
 
 ---
 
@@ -56,7 +58,8 @@ Implement the repository milestone by milestone according to the ticket backlog:
 
 | Milestone | Ticket File | Description | Core Artifacts |
 |---|---|---|---|
-| **OPS-001** | [`tickets/OPS-001-scaffolding-config-resilience.md`](tickets/OPS-001-scaffolding-config-resilience.md) | Python environment, dependencies, `.env.example`, Pydantic settings & 429 backoff decorator. | `requirements.txt`, `.env.example`, `src/config.py`, `src/agent/resilience.py` |
+| **OPS-000** | [`tickets/OPS-000-foundation-and-planning.md`](tickets/OPS-000-foundation-and-planning.md) | Project foundation, PRD, RFC-001, 7 ADRs, ONT-001 Domain Ontology & L8 Audit (`done`). | `PRD`, `RFC-001`, `ONT-001`, `docs/adr/`, `MASTER_PLAN.md` |
+| **OPS-001** | [`tickets/OPS-001-scaffolding-config-resilience.md`](tickets/OPS-001-scaffolding-config-resilience.md) | Python environment, dependencies, `.env.example`, Pydantic settings & 429 backoff decorator. | `pyproject.toml`, `requirements.txt`, `.env.example`, `src/config.py`, `src/agent/resilience.py`, `tests/conftest.py` |
 | **OPS-002A** | [`tickets/OPS-002A-bigquery-live-client.md`](tickets/OPS-002A-bigquery-live-client.md) | BigQuery client, dynamic schema introspection, caching & table qualification sanitizer. | `src/bq/client.py`, `src/bq/schema.py` |
 | **OPS-002B** | [`tickets/OPS-002B-offline-mock-duckdb-engine.md`](tickets/OPS-002B-offline-mock-duckdb-engine.md) | In-memory DuckDB offline mock engine with synthetic e-commerce fixtures & auto-fallback. | `src/bq/mock_engine.py` |
 | **OPS-003** | [`tickets/OPS-003-langgraph-state-and-sql-generator.md`](tickets/OPS-003-langgraph-state-and-sql-generator.md) | `AgentState` schema, domain few-shot prompts & GoogleSQL generation node with ONT-001 rules. | `src/agent/state.py`, `src/agent/prompts.py`, `src/agent/nodes/generate_sql.py` |
@@ -66,7 +69,7 @@ Implement the repository milestone by milestone according to the ticket backlog:
 | **OPS-007** | [`tickets/OPS-007-saved-reports-and-hitl-interrupt.md`](tickets/OPS-007-saved-reports-and-hitl-interrupt.md) | Local SQLite persistence for saved reports and EU AI Act HITL deletion confirmation interrupt. | `src/storage/reports.py`, `src/agent/nodes/reports.py` |
 | **OPS-008** | [`tickets/OPS-008-opentelemetry-genai-tracing.md`](tickets/OPS-008-opentelemetry-genai-tracing.md) | OpenTelemetry GenAI semantic tracing, node latency, and 2–5 call budget tracker. | `src/telemetry/tracer.py` |
 | **OPS-009** | [`tickets/OPS-009-rich-cli-interface-and-main.md`](tickets/OPS-009-rich-cli-interface-and-main.md) | Rich interactive terminal chat UI, telemetry panel, and `main.py` entrypoint. | `main.py`, `src/cli/view.py`, `src/cli/tables.py` |
-| **OPS-010** | [`tickets/OPS-010-production-hld-and-20-battery-runner.md`](tickets/OPS-010-production-hld-and-20-battery-runner.md) | Comprehensive enterprise High-Level Design (HLD) with C4 diagrams and 20-battery test runner. | `docs/HLD.md`, `scripts/verify_batteries.py` |
+| **OPS-010** | [`tickets/OPS-010-production-hld-and-20-battery-runner.md`](tickets/OPS-010-production-hld-and-20-battery-runner.md) | Comprehensive enterprise High-Level Design (HLD) with C4 diagrams and 20-battery test runner. | `README.md`, `docs/HLD.md`, `scripts/verify_batteries.py` |
 
 ---
 

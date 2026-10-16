@@ -10,12 +10,12 @@ Implement enterprise security and privacy guardrails: deterministic PII redactio
 Enforce GDPR data minimization and prevent cross-tenant data leaks between category directors (Marcus persona).
 
 ### Description
-- Implement `src/guardrails/pii.py` using deterministic regex and NLP patterns to mask customer names, emails (`[EMAIL_REDACTED]`), and IP addresses (`[IP_REDACTED]`) from dataframes and final executive reports.
+- Implement `src/guardrails/pii.py` using deterministic regex and pattern recognizers (running completely in-process without heavy external model downloads like `en_core_web_sm`, preserving the 2-minute clone-and-run rule) to mask customer names, emails (`[EMAIL_REDACTED]`), and IP addresses (`[IP_REDACTED]`) from dataframes and final executive reports.
 - Implement `src/guardrails/scope.py` inspecting user context (`allowed_brands`) and injecting `WHERE brand IN (...)` into SQL queries.
 - **Conditional Scoping Nuance (Mitigation 2):** Scoping guard detects whether the query accesses product/transaction metrics. If querying pure `users` demographics, it avoids appending non-existent `brand` column filters to the `users` table, preventing BigQuery 400 errors.
 
 ### Acceptance Criteria
-1. Given raw BigQuery rows containing customer emails or IP addresses, the PII sanitizer scrubs all sensitive identifiers before display.
+1. Given raw BigQuery or DuckDB rows containing sensitive identifiers, the PII sanitizer scrubs all 4 mandated fields: `first_name` $\rightarrow$ `[NAME_REDACTED]`, `last_name` $\rightarrow$ `[NAME_REDACTED]`, `email` $\rightarrow$ `[EMAIL_REDACTED]`, and `ip_address` $\rightarrow$ `[IP_REDACTED]`, populating `state["sanitized_results"]`.
 2. Given a user session scoped to specific brands (e.g. `['Calvin Klein', 'Tommy Hilfiger']`), generated SQL enforces brand restrictions.
 3. Pure user demographic queries without product joins execute without invalid `brand` column syntax errors.
 4. Redaction operates in-process with zero external API latency or costs.
