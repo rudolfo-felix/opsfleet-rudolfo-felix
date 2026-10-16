@@ -210,7 +210,7 @@ flowchart TB
         
         IntentRouter -->|"Data Query"| SQLGen["SQL Generator Node\n(Few-shot guided + BQ Schema)"]
         SQLGen --> BQExec["BigQuery Executor Node"]
-        BQExec -->|"Syntax Error / Empty Return"| SelfCorrect["Self-Correction Loop\n(Max 3 iterations)"]
+        BQExec -->|"Syntax Error / Empty Return"| SelfCorrect["Self-Correction Loop\n(Max 2 retries / Circuit Breaker)"]
         SelfCorrect --> BQExec
         BQExec -->|"Valid Results (DataFrame)"| Synthesizer["Insight & Report Synthesizer"]
         
@@ -261,7 +261,7 @@ flowchart TB
 
 ### Stack Selection (Approved by Opsfleet)
 * **Language:** Python 3.11+
-* **LLM Engine:** Google Gemini 1.5 Flash (`gemini-1.5-flash`) via `google-genai` / `langchain-google-genai`
+* **LLM Engine:** Google Gemini Flash (`gemini-2.5-flash` default, configurable via `MODEL_NAME` per Vlad Bondarenko & ADR-0006) via `google-genai`
 * **Orchestration:** `LangGraph` (StateGraph with checkpointer / memory)
 * **Data Warehouse:** `google-cloud-bigquery` client (`bigquery-public-data.thelook_ecommerce`)
 * **Local Persistence:** SQLite (`reports.db`) for the Saved Reports library and audit logs

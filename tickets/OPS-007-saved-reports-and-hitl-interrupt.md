@@ -11,15 +11,16 @@ Provide report persistence for executive workflows and enforce human governance 
 
 ### Description
 - Implement `src/storage/reports.py` managing SQLite schema (`reports` table: id, user_id, title, content, created_at, tags).
-- Implement CRUD operations: `save_report()`, `list_reports()`, `delete_report()`.
+- Implement CRUD operations: `save_report()`, `list_reports(keyword: Optional[str] = None)` (filtering titles/content case-insensitively), and `delete_report(report_id: int)`.
 - Implement `src/agent/nodes/reports.py` integrating LangGraph `interrupt()`: any command to delete reports halts graph execution and prompts the user for explicit confirmation (`Are you sure you want to delete report #X? [y/N]`).
-- Configure graph with `MemorySaver` checkpointer and thread session tracking to enable clean resumption on confirmation (Mitigation 5).
+- Configure graph with `MemorySaver` checkpointer and unique session thread tracking (`thread_id = str(uuid.uuid4())` per interactive CLI run) to enable clean resumption on confirmation (Mitigation 5).
 
 ### Acceptance Criteria
-1. Executives can save synthesized briefings to SQLite and list them by keyword or user ID.
+1. Executives can save synthesized briefings to SQLite and list them with optional keyword search (`list_reports(keyword)` returns case-insensitive matching reports).
 2. Destructive delete commands trigger a paused graph state (`interrupt`), requesting user input.
 3. If user confirms with `y` or `yes`, deletion commits and confirms.
 4. If user cancels with `n` or anything other than confirmation, deletion aborts and data remains intact.
+5. `MemorySaver` preserves graph state using unique `thread_id` so graph resumes seamlessly after human confirmation.
 
 ### Implementation & Architecture
 - 📄 **Related ADR:** [ADR-0004](../docs/adr/0004-sqlite-local-storage-vs-cloudsql.md)
