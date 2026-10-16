@@ -85,6 +85,7 @@ STATIC_FALLBACK_SCHEMA: dict[str, list[ColumnInfo]] = {
         ColumnInfo("longitude", "FLOAT64", True, "Geographic longitude"),
         ColumnInfo("traffic_source", "STRING", False, "Acquisition channel (e.g. Search, Organic)"),
         ColumnInfo("created_at", "TIMESTAMP", False, "Account creation timestamp"),
+        ColumnInfo("ip_address", "STRING", False, "Customer IPv4 address (PII)"),
     ],
 }
 

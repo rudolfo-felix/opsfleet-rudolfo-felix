@@ -1,0 +1,31 @@
+=== OPS-002B MockDuckDBEngine Live Demonstration ===
+
+⚠️ Offline Mode: Using in-memory DuckDB engine with synthetic thelook_ecommerce 
+data.
+
+1. Schema Introspection via Mock Inspector:
+   - Table orders: 9 columns introspected
+   - Table products: 9 columns introspected
+   - Table users: 16 columns introspected
+   - Table order_items: 11 columns introspected
+
+2. Analytical Query 1: Net Revenue (excluding Cancelled & Returned):
+ net_revenue_usd  total_valid_orders  aov_usd
+          9754.3                  42   232.25
+
+3. Analytical Query 2: Top Brands by Gross Profit Margin:
+       brand  total_sales_usd  total_cost_usd  gross_margin_pct
+        Nike          1575.21           975.9             38.05
+      Adidas          1310.37           769.5             41.28
+      Levi's          1087.61           613.5             43.59
+        Puma           987.07           560.7             43.20
+Calvin Klein           838.54           472.5             43.65
+
+4. Analytical Query 3: Monthly Orders Trend (Date Truncation & Dialect Inversion):
+order_month  total_orders  completed_orders
+ 2026-02-01             1               0.0
+ 2026-01-01             7               6.0
+ 2025-12-01             6               4.0
+ 2025-11-01             6               3.0
+
+=== All Mock Engine Parity Checks Passed Successfully ===

@@ -1,5 +1,5 @@
 ## OPS-002B: Offline Mock DuckDB Engine & Synthetic E-Commerce Fixtures
-Status: backlog  
+Status: done  
 Branch: feat/OPS-002B-mock-duckdb-engine  
 Priority: High  
 

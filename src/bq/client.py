@@ -5,6 +5,7 @@ Invariant 6 (Table Qualification Sanitizer).
 """
 
 import logging
+import os
 import re
 from typing import Any
 
@@ -12,6 +13,7 @@ import google.auth
 import pandas as pd
 from google.auth.exceptions import DefaultCredentialsError, GoogleAuthError
 from google.cloud import bigquery
+from rich.console import Console
 
 from src.bq.exceptions import (
     BigQueryClientError,
@@ -183,3 +185,40 @@ class BigQueryClient:
                 elif hasattr(v, "isoformat"):
                     record[k] = v.isoformat()
         return records
+
+
+def get_bigquery_client(
+    force_mock: bool = False,
+    dataset_id: str = DEFAULT_DATASET,
+    project_id: str | None = None,
+) -> Any:
+    """Factory creating a unified BigQuery or in-memory DuckDB client.
+
+    Operationalizes Invariant 1 (2-minute evaluator rule) & Invariant 5 (Dual BigQuery Strategy):
+    - If force_mock is True or MOCK_BIGQUERY env var is truthy ('true', '1', 'yes'),
+      instantiates MockDuckDBEngine immediately.
+    - If BigQueryClient initialization fails due to CredentialsMissingError,
+      gracefully logs a user-friendly warning and returns MockDuckDBEngine.
+    """
+    mock_env = os.environ.get("MOCK_BIGQUERY", "").strip().lower() in ("true", "1", "yes")
+
+    if force_mock or mock_env:
+        from src.bq.mock_engine import MockDuckDBEngine
+
+        console = Console()
+        console.print(
+            "[yellow]⚠️ Offline Mode: Using in-memory DuckDB engine with synthetic thelook_ecommerce data.[/yellow]"
+        )
+        return MockDuckDBEngine(dataset_id=dataset_id)
+
+    try:
+        return BigQueryClient(project_id=project_id, dataset_id=dataset_id)
+    except CredentialsMissingError as e:
+        from src.bq.mock_engine import MockDuckDBEngine
+
+        console = Console()
+        console.print(
+            f"[yellow]⚠️ Google Cloud credentials not found ({e}).[/yellow]\n"
+            "[yellow]➡️ Gracefully falling back to in-memory DuckDB engine with synthetic thelook_ecommerce data.[/yellow]"
+        )
+        return MockDuckDBEngine(dataset_id=dataset_id)
