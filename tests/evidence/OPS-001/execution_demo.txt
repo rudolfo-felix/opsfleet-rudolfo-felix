@@ -1,0 +1,31 @@
+=== EVIDENCE 1: Handled Missing API Key Error ===
+Caught handled ConfigurationError successfully:
+
+┌────────────────────────────────────────────────────────────────────────┐
+│ ⚠️  MISSING GEMINI_API_KEY                                              │
+├────────────────────────────────────────────────────────────────────────┤
+│ The retail assistant requires a Google Gemini API key to operate.     │
+│                                                                        │
+│ 1. Get a free API key at: https://aistudio.google.com/                 │
+│ 2. Create a .env file from .env.example:                              │
+│      cp .env.example .env                                              │
+│ 3. Add your key:                                                       │
+│      GEMINI_API_KEY=AIzaSy...                                          │
+│                                                                        │
+│ Or export it directly in your shell:                                   │
+│      export GEMINI_API_KEY=AIzaSy...                                   │
+└────────────────────────────────────────────────────────────────────────┘
+
+
+=== EVIDENCE 2: Exponential Backoff Calculation ===
+Attempt 1: delay = 1.13s
+Attempt 2: delay = 2.15s
+Attempt 3: delay = 4.01s
+Attempt 4: delay = 7.89s
+
+=== EVIDENCE 3: Valid Settings Loading ===
+Loaded MODEL_NAME: gemini-2.5-flash
+Loaded GCP_PROJECT_ID: bigquery-public-data
+Loaded MOCK_BIGQUERY: False
+Loaded MAX_LLM_CALLS_PER_QUERY: 5
+Loaded MAX_SQL_RETRIES: 2

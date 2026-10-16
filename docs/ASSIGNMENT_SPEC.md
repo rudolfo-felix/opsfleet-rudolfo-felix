@@ -97,9 +97,15 @@ from typing import Optional, List, Dict, Any
 import pandas as pd
 from google.cloud import bigquery
 
+
 class BigQueryRunner:
     """A lean BigQuery client for executing SQL queries and returning DataFrame results."""
-    def __init__(self, project_id: Optional[str] = None, dataset_id: Optional[str] = "bigquery-public-data.thelook_ecommerce") -> None:
+
+    def __init__(
+        self,
+        project_id: Optional[str] = None,
+        dataset_id: Optional[str] = "bigquery-public-data.thelook_ecommerce",
+    ) -> None:
         """Initialize BigQuery client."""
 ```
 

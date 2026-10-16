@@ -10,7 +10,7 @@ Every commit and feature branch maps directly to an atomic ticket ID (`OPS-XXX`)
 | Story ID | Title & Scope | Status | Branch | Priority |
 |:---:|---|:---:|:---:|:---:|
 | **[OPS-000](./OPS-000-foundation-and-planning.md)** | Project Foundation, Architectural Blueprints & Delivery Planning | `done` | `main` | Critical |
-| **[OPS-001](./OPS-001-scaffolding-config-resilience.md)** | Repository Scaffolding, Pydantic Config & Rate-Limit Backoff | `backlog` | `feat/OPS-001-scaffolding` | High |
+| **[OPS-001](./OPS-001-scaffolding-config-resilience.md)** | Repository Scaffolding, Pydantic Config & Rate-Limit Backoff | `done` | `feat/OPS-001-scaffolding` | High |
 | **[OPS-002A](./OPS-002A-bigquery-live-client.md)** | BigQuery Live Client, Dynamic Schema Cache & Table Sanitizer | `backlog` | `feat/OPS-002A-bq-live-client` | High |
 | **[OPS-002B](./OPS-002B-offline-mock-duckdb-engine.md)** | Offline Mock DuckDB Engine & Synthetic E-Commerce Fixtures | `backlog` | `feat/OPS-002B-mock-duckdb-engine` | High |
 | **[OPS-003](./OPS-003-langgraph-state-and-sql-generator.md)** | LangGraph State Schema & GoogleSQL Generation Node | `backlog` | `feat/OPS-003-state-sql-gen` | Critical |

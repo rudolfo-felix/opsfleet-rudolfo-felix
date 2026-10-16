@@ -1,5 +1,5 @@
 ## OPS-001: Repository Scaffolding, Pydantic Config & Rate-Limit Backoff
-Status: backlog  
+Status: done  
 Branch: feat/OPS-001-scaffolding  
 Priority: High  
 
