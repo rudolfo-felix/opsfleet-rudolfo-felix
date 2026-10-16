@@ -144,8 +144,7 @@ def test_stategraph_assembly_and_intent_invocations():
     result_help = graph.invoke(state_help)
     assert "TheLook Retail Analytics Assistant" in result_help["executive_report"]
 
-    # 2. Test Reports HITL Intent
-    state_reports = create_initial_state("Delete report #2")
+    # 2. Test Reports Listing Intent
+    state_reports = create_initial_state("Show saved reports")
     result_reports = graph.invoke(state_reports)
-    assert result_reports["requires_confirmation"] is True
-    assert "Report management requested" in result_reports["executive_report"]
+    assert "Saved Reports" in result_reports["executive_report"]

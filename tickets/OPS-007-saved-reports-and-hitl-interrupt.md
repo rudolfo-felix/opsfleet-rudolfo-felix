@@ -1,5 +1,5 @@
 ## OPS-007: Saved Reports SQLite Storage & EU AI Act HITL Interrupt
-Status: backlog  
+Status: done  
 Branch: feat/OPS-007-reports-hitl  
 Priority: High  
 

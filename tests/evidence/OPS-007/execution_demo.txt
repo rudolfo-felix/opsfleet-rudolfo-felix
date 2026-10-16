@@ -1,0 +1,18 @@
+=== OPS-007 DEMO: SQLITE REPORT STORAGE & EU AI ACT HITL OVERSIGHT ===
+
+1. Persisted Executive Briefing to SQLite: #1
+2. Case-Insensitive Search (keyword="activewear"): Found 1 report(s): "Q1 Activewear Margin Briefing"
+
+3. Triggering High-Stakes Deletion Command: "delete report #1"
+4. Graph Execution Halted at HITL Gate (EU AI Act Article 14):
+   Action: delete_report
+   Target: Report #1 (Q1 Activewear Margin Briefing)
+   Prompt: ⚠️ **High-Stakes Oversight (EU AI Act Art. 14):** Are you sure you want to delete report #1 ('Q1 Activewear Margin Briefing')? This operation cannot be undone. [y/N]: 
+
+5. Resuming with Denial ("no"):
+   Status: confirmation_status=False
+   Output: 🛑 **Action Cancelled:** Deletion of report #1 ('Q1 Activewear Margin Briefing') was aborted by user. Data remains completely intact.
+
+6. Second Run - Resuming with Confirmation ("yes"):
+   Status: confirmation_status=True
+   Output: 🗑️ **Report Deleted:** Report #1 ('Q1 Activewear Margin Briefing') has been permanently deleted from storage.

@@ -1,0 +1,16 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.11.15, pytest-9.1.1, pluggy-1.7.0 -- /Users/rudy/Documents/opsfleet-rudolfo-felix/.venv/bin/python3.11
+cachedir: .pytest_cache
+rootdir: /Users/rudy/Documents/opsfleet-rudolfo-felix
+configfile: pyproject.toml
+plugins: langsmith-0.14.11, asyncio-1.4.0, anyio-4.15.1
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 5 items
+
+tests/test_destructive_ops.py::test_sqlite_storage_crud_and_search PASSED [ 20%]
+tests/test_destructive_ops.py::test_hitl_interrupt_and_confirm_deletion PASSED [ 40%]
+tests/test_destructive_ops.py::test_hitl_interrupt_and_abort_deletion PASSED [ 60%]
+tests/test_destructive_ops.py::test_delete_missing_id_and_non_existent PASSED [ 80%]
+tests/test_destructive_ops.py::test_save_and_list_reports_flow PASSED    [100%]
+
+============================== 5 passed in 1.28s ===============================

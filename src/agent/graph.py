@@ -13,6 +13,7 @@ from langgraph.graph import END, START, StateGraph
 from src.agent.nodes.circuit_breaker import circuit_breaker
 from src.agent.nodes.execute_sql import execute_sql
 from src.agent.nodes.generate_sql import generate_sql
+from src.agent.nodes.reports import reports_node
 from src.agent.nodes.sanitize_pii import sanitize_pii
 from src.agent.nodes.self_correct import self_correct
 from src.agent.nodes.synthesize import synthesize
@@ -26,9 +27,12 @@ def route_intent(state: AgentState) -> str:
     query = state.get("user_query", "").strip()
 
     # 1. Report management & destructive actions (OPS-007 HITL isolation)
-    if re.search(
-        r"\b(delete|remove|clear|drop|purge)\s+.*report\b", query, re.IGNORECASE
-    ) or re.search(r"\b(saved\s+reports|list\s+reports|view\s+reports)\b", query, re.IGNORECASE):
+    if (
+        re.search(r"\b(delete|remove|clear|drop|purge)\s+.*report\b", query, re.IGNORECASE)
+        or re.search(r"\b(saved\s+reports|list\s+reports|view\s+reports|show\s+reports)\b", query, re.IGNORECASE)
+        or re.search(r"\b(save|bookmark|store)\s+.*report\b", query, re.IGNORECASE)
+        or re.search(r"^\s*(save\s+report|list\s+reports|show\s+saved\s+reports)\s*$", query, re.IGNORECASE)
+    ):
         return "reports"
 
     # 2. General help / greetings
@@ -52,14 +56,6 @@ def evaluate_execution(state: AgentState) -> str:
             return "self_correct"
         return "circuit_breaker"
     return "sanitize_pii"
-
-
-def reports_node(state: AgentState) -> dict[str, Any]:
-    """Stub for report management and HITL oversight (to be implemented in OPS-007)."""
-    return {
-        "requires_confirmation": True,
-        "executive_report": "Report management requested. Awaiting human confirmation.",
-    }
 
 
 def help_node(state: AgentState) -> dict[str, Any]:
