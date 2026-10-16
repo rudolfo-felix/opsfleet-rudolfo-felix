@@ -1,0 +1,28 @@
+=== EVIDENCE 1: Bare Table Qualification Sanitizer ===
+Input SQL:  SELECT order_id, status FROM orders WHERE status = 'Complete'
+Sanitized:  SELECT order_id, status FROM `bigquery-public-data.thelook_ecommerce.orders` WHERE status = 'Complete'
+
+=== EVIDENCE 2: Multi-Table Joins Qualification ===
+Input SQL:  SELECT o.id, oi.sale_price, p.brand FROM orders o JOIN order_items oi ON o.id = oi.order_id LEFT JOIN products p ON oi.product_id = p.id
+Sanitized:  SELECT o.id, oi.sale_price, p.brand FROM `bigquery-public-data.thelook_ecommerce.orders` o JOIN `bigquery-public-data.thelook_ecommerce.order_items` oi ON o.id = oi.order_id LEFT JOIN `bigquery-public-data.thelook_ecommerce.products` p ON oi.product_id = p.id
+
+=== EVIDENCE 3: Temporal Interval Normalization ===
+Input SQL:  SELECT * FROM orders WHERE created_at >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL '30 days')
+Sanitized:  SELECT * FROM `bigquery-public-data.thelook_ecommerce.orders` WHERE created_at >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 30 DAY)
+
+=== EVIDENCE 4: Read-Only Safety Guardrail ===
+is_read_only('SELECT * FROM orders') -> True
+is_read_only('DELETE FROM orders WHERE id = 1') -> False
+is_read_only('SELECT 1; DROP TABLE products;') -> False
+
+=== EVIDENCE 5: Schema Inspector Markdown Output Sample ===
+# BigQuery Dataset Schema: `bigquery-public-data.thelook_ecommerce`
+
+Use the following table and column definitions to construct accurate GoogleSQL queries:
+
+### Table: `bigquery-public-data.thelook_ecommerce.orders`
+| Column Name | Data Type | Nullable | Description |
+|---|---|:---:|---|
+| `order_id` | `INT64` | NO | Primary key for the order |
+| ...
+[truncated for brevity]

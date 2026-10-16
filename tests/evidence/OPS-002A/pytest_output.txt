@@ -1,0 +1,27 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.11.15, pytest-9.1.1, pluggy-1.7.0 -- /Users/rudy/Documents/opsfleet-rudolfo-felix/.venv/bin/python3.11
+cachedir: .pytest_cache
+rootdir: /Users/rudy/Documents/opsfleet-rudolfo-felix
+configfile: pyproject.toml
+plugins: langsmith-0.14.11, asyncio-1.4.0, anyio-4.15.1
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 16 items
+
+tests/test_bq_schema.py::test_sanitize_bare_single_table PASSED          [  6%]
+tests/test_bq_schema.py::test_sanitize_bare_table_with_backticks PASSED  [ 12%]
+tests/test_bq_schema.py::test_sanitize_multi_table_joins PASSED          [ 18%]
+tests/test_bq_schema.py::test_sanitize_comma_separated_joins PASSED      [ 25%]
+tests/test_bq_schema.py::test_sanitize_already_qualified_table_preserved PASSED [ 31%]
+tests/test_bq_schema.py::test_sanitize_cte_shadowing_preserved PASSED    [ 37%]
+tests/test_bq_schema.py::test_normalize_temporal_intervals PASSED        [ 43%]
+tests/test_bq_schema.py::test_is_read_only_allowed_queries PASSED        [ 50%]
+tests/test_bq_schema.py::test_is_read_only_blocks_mutating_queries PASSED [ 56%]
+tests/test_bq_schema.py::test_is_read_only_blocks_semicolon_chaining PASSED [ 62%]
+tests/test_bq_schema.py::test_schema_inspector_cache_and_ttl PASSED      [ 68%]
+tests/test_bq_schema.py::test_schema_inspector_static_fallback PASSED    [ 75%]
+tests/test_bq_schema.py::test_format_schema_for_prompt PASSED            [ 81%]
+tests/test_bq_schema.py::test_bigquery_client_missing_credentials PASSED [ 87%]
+tests/test_bq_schema.py::test_bigquery_client_read_only_rejection PASSED [ 93%]
+tests/test_bq_schema.py::test_bigquery_client_query_to_dataframe_sanitizes PASSED [100%]
+
+============================== 16 passed in 2.90s ==============================
