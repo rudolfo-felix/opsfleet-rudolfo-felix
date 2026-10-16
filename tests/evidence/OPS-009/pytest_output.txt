@@ -1,0 +1,18 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.11.15, pytest-9.1.1, pluggy-1.7.0 -- /Users/rudy/Documents/opsfleet-rudolfo-felix/.venv/bin/python3.11
+cachedir: .pytest_cache
+rootdir: /Users/rudy/Documents/opsfleet-rudolfo-felix
+configfile: pyproject.toml
+plugins: langsmith-0.14.11, asyncio-1.4.0, anyio-4.15.1
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 7 items
+
+tests/test_cli.py::test_cli_argument_parsing PASSED                      [ 14%]
+tests/test_cli.py::test_cli_dry_run_flag PASSED                          [ 28%]
+tests/test_cli.py::test_cli_missing_api_key_clean_exit PASSED            [ 42%]
+tests/test_cli.py::test_detect_database_engine PASSED                    [ 57%]
+tests/test_cli.py::test_format_records_to_table_with_records PASSED      [ 71%]
+tests/test_cli.py::test_view_presentation_rendering PASSED               [ 85%]
+tests/test_cli.py::test_interactive_mock_repl_turn PASSED                [100%]
+
+============================== 7 passed in 1.40s ===============================

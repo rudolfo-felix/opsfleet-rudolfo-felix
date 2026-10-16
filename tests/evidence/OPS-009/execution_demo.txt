@@ -1,0 +1,37 @@
+=== OPS-009 DEMO: RICH INTERACTIVE CLI INTERFACE & MAIN.PY ENTRYPOINT ===
+
+1. AUTOMATED PRE-FLIGHT VERIFICATION (python main.py --dry-run):
+
+
+2. EVALUATOR ZERO-TRACEBACK ERROR HANDLING (Missing API Key):
+╭────────────────── 🛑 Missing Configuration: GEMINI_API_KEY ──────────────────╮
+│                                                                              │
+│  Field required: Environment variable GEMINI_API_KEY is not set.             │
+│                                                                              │
+│  Resolution:                                                                 │
+│  1. Acquire a free API key: https://aistudio.google.com/                     │
+│  2. export GEMINI_API_KEY="AIzaSy..."                                        │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+
+3. RICH TABULAR VISUALIZATION WITH PII REDACTION:
+                 📊 Brand Profitability Summary                  
+┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━┓
+┃ brand          ┃ net_revenue ┃ gross_margin_pct ┃ order_count ┃
+┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━┩
+│ Calvin Klein   │   14,250.75 │            44.20 │         120 │
+│ Tommy Hilfiger │   12,890.50 │            41.80 │          98 │
+│ Nike           │   25,600.00 │            38.50 │         210 │
+└────────────────┴─────────────┴──────────────────┴─────────────┘
+
+
+4. FINOPS DISCIPLINE & TOKEN ACCOUNTING CARD:
+                      ⚡ Execution Telemetry & FinOps Card                      
+┏━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┓
+┃              ┃              ┃   Prompt /    ┃      LLM      ┃     FinOps     ┃
+┃ Turn Latency ┃ Total Tokens ┃  Completion   ┃  Invocations  ┃   Discipline   ┃
+┡━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━┩
+│    1.18s     │     560      │   392 / 168   │    2 calls    │  PASS (Budget  │
+│              │              │               │               │      2-5)      │
+└──────────────┴──────────────┴───────────────┴───────────────┴────────────────┘

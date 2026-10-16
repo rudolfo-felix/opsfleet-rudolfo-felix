@@ -69,7 +69,8 @@ def generate_sql(
     if client is not None:
         gemini_client = client
     else:
-        api_key = active_settings.gemini_api_key.get_secret_value()
+        raw_key = active_settings.gemini_api_key
+        api_key = raw_key.get_secret_value() if hasattr(raw_key, "get_secret_value") else str(raw_key)
         gemini_client = genai.Client(api_key=api_key)
 
     response = _invoke_gemini_model(
