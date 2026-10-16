@@ -14,7 +14,7 @@ Every commit and feature branch maps directly to an atomic ticket ID (`OPS-XXX`)
 | **[OPS-002A](./OPS-002A-bigquery-live-client.md)** | BigQuery Live Client, Dynamic Schema Cache & Table Sanitizer | `done` | `feat/OPS-002A-bq-live-client` | High |
 | **[OPS-002B](./OPS-002B-offline-mock-duckdb-engine.md)** | Offline Mock DuckDB Engine & Synthetic E-Commerce Fixtures | `done` | `feat/OPS-002B-mock-duckdb-engine` | High |
 | **[OPS-003](./OPS-003-langgraph-state-and-sql-generator.md)** | LangGraph State Schema & GoogleSQL Generation Node | `done` | `feat/OPS-003-state-sql-gen` | Critical |
-| **[OPS-004](./OPS-004-sql-execution-and-self-correction.md)** | Execution Node, Self-Correction Loop & FinOps Circuit Breaker | `backlog` | `feat/OPS-004-execution-self-correction` | Critical |
+| **[OPS-004](./OPS-004-sql-execution-and-self-correction.md)** | Execution Node, Self-Correction Loop & FinOps Circuit Breaker | `done` | `feat/OPS-004-execution-self-correction` | Critical |
 | **[OPS-005](./OPS-005-executive-report-synthesizer.md)** | Executive Insight & Action Item Synthesizer Node | `backlog` | `feat/OPS-005-report-synthesizer` | High |
 | **[OPS-006](./OPS-006-enterprise-pii-and-brand-scoping.md)** | Enterprise PII Sanitizer Gate & User Brand Scoping | `backlog` | `feat/OPS-006-pii-scoping-guardrails` | Critical |
 | **[OPS-007](./OPS-007-saved-reports-and-hitl-interrupt.md)** | Saved Reports SQLite Storage & EU AI Act HITL Interrupt | `backlog` | `feat/OPS-007-reports-hitl` | High |

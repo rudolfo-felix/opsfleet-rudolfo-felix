@@ -1,0 +1,50 @@
+=== OPS-004 LangGraph Cyclic Execution & Circuit Breaker Demo ===
+
+1. Intent Classifier Evaluation (Zero-LLM Cost):
+   - "What is our Net Revenue by category?" -> generate_sql
+   - "Delete report #12" -> reports
+   - "help" -> help
+
+2. Simulating 0-Rows Diagnostic Feedback:
+⚠️ Google Cloud credentials not found (Google Cloud Application Default 
+Credentials (ADC) missing or invalid: Your default credentials were not found. 
+To set up Application Default Credentials, see 
+https://cloud.google.com/docs/authentication/external/set-up-adc for more 
+information.. Use MockBigQueryEngine or configure gcloud auth 
+application-default login.).
+➡️ Gracefully falling back to in-memory DuckDB engine with synthetic 
+thelook_ecommerce data.
+Query returned 0 rows. Triggering diagnostic self-correction feedback.
+Circuit breaker tripped after 2 retries. Halting query execution to preserve FinOps call budget.
+   - Query Results Count: 0
+   - Diagnostic Feedback Preview: Query executed successfully but returned 0 rows. Common retail causes in thelook_ecommerce:
+1) Status casing is title-ca ...
+   - Evaluator Routing Decision: self_correct
+
+3. Simulating Circuit Breaker Trip at Retry Cap (retry_count = 2):
+   - Evaluator Decision at 2 Retries: circuit_breaker
+   - Executive Report Output:
+## ⚠️ Analytical Query Notice
+
+**Self-Correction Limit Reached:** The assistant attempted 2 automated corrections but was unable to complete the query successfully.
+
+**Diagnostic Details:**
+```
+Unrecognized column name: bogus_field
+```
+
+**Recommended Next Steps:**
+- Verify whether the date range specified has transactional data in the store.
+- Check the spelling of specific category, department, or brand names.
+- Try asking a broader or rephrased question.
+
+*FinOps Guardrail: Zero additional tokens or costs were incurred.*
+
+4. LangGraph StateGraph Invocation:
+   - Graph Output on Help Intent:
+## 🛍️ TheLook Retail Analytics Assistant
+
+I can answer executive questions across sales, profitability, churn, and inventory:
+- **Net Revenue:** *'Wha ...
+
+=== OPS-004 Execution, Reflection & Circuit Breaker Verified ===
