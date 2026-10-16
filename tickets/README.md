@@ -21,6 +21,7 @@ Every commit and feature branch maps directly to an atomic ticket ID (`OPS-XXX`)
 | **[OPS-008](./OPS-008-opentelemetry-genai-tracing.md)** | OpenTelemetry GenAI Telemetry & Token Accounting | `done` | `main` | Medium |
 | **[OPS-009](./OPS-009-rich-cli-interface-and-main.md)** | Rich Interactive CLI Interface & Application Entrypoint (`main.py`) | `done` | `main` | High |
 | **[OPS-010](./OPS-010-production-hld-and-20-battery-runner.md)** | Production HLD Document, 20-Battery Test Runner & Delivery Gate | `done` | `main` | Critical |
+| **[OPS-011](./OPS-011-golden-trios-prompt-frontier.md)** | Golden Trios Knowledge Retrieval & Prompt Frontier Benchmark | `done` | `main` | High |
 
 ---
 
@@ -48,6 +49,7 @@ flowchart TD
     OPS008["OPS-008\nOTel Telemetry & Call Tracker"]:::delivery
     OPS009["OPS-009\nRich CLI & main.py Entrypoint"]:::delivery
     OPS010["OPS-010\nC4 HLD Docs & 20-Battery Runner"]:::delivery
+    OPS011["OPS-011\nGolden Trios RAG & Prompt Benchmark"]:::brain
 
     OPS001 --> OPS002A
     OPS001 --> OPS002B
@@ -64,6 +66,7 @@ flowchart TD
     OPS007 --> OPS009
     OPS008 --> OPS009
     OPS009 --> OPS010
+    OPS010 --> OPS011
 ```
 
 ---

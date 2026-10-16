@@ -29,21 +29,34 @@ class RateLimitExhaustedError(Exception):
 
 
 def is_rate_limit_error(exc: Exception) -> bool:
-    """Determine whether an exception represents an HTTP 429 / RESOURCE_EXHAUSTED rate limit."""
+    """Determine whether an exception represents an HTTP 429 / 503 / RESOURCE_EXHAUSTED transient error."""
     msg = str(exc).lower()
 
-    # Check for HTTP 429 or RESOURCE_EXHAUSTED in message
-    if "429" in msg or "resource_exhausted" in msg or "quota" in msg or "rate limit" in msg:
+    # Check for HTTP 429, 503, RESOURCE_EXHAUSTED, UNAVAILABLE, or high demand in message
+    if (
+        "429" in msg
+        or "503" in msg
+        or "resource_exhausted" in msg
+        or "quota" in msg
+        or "rate limit" in msg
+        or "unavailable" in msg
+        or "high demand" in msg
+    ):
         return True
 
     # Check status_code or code attribute if available
     status_code = getattr(exc, "status_code", getattr(exc, "code", None))
-    if status_code in (429, "RESOURCE_EXHAUSTED"):
+    if status_code in (429, 503, "RESOURCE_EXHAUSTED", "UNAVAILABLE"):
         return True
 
     # Check Google API exception types by name
     exc_type_name = type(exc).__name__
-    if exc_type_name in ("ResourceExhausted", "TooManyRequests"):
+    if exc_type_name in (
+        "ResourceExhausted",
+        "TooManyRequests",
+        "ServerError",
+        "ServiceUnavailable",
+    ):
         return True
 
     return False
@@ -83,7 +96,8 @@ def retry_with_backoff(
 ):
     """Decorator to retry functions failing due to HTTP 429 / RESOURCE_EXHAUSTED.
 
-    Supports both bare @retry_with_backoff and parameterized @retry_with_backoff(max_retries=5).
+    Supports both bare @retry_with_backoff and parameterized @retry_with_backoff(max_retries=3).
+    Conforms to established contract from OPS-001 (max_retries=3, initial_delay=1.0s).
 
     Args:
         func: Optional function when used as bare decorator @retry_with_backoff.

@@ -20,6 +20,7 @@ from src.agent.state import AgentState
 from src.bq.schema import sanitize_table_qualification
 from src.config import Settings, get_settings
 from src.guardrails.scope import apply_brand_scoping
+from src.knowledge import get_golden_bucket
 from src.telemetry.tracer import trace_node
 
 logger = logging.getLogger(__name__)
@@ -57,13 +58,17 @@ def generate_sql(
     """LangGraph node: generate or self-correct GoogleSQL query from state."""
     active_settings = settings or get_settings()
 
+    user_query = state.get("user_query", "")
+    golden_trio = get_golden_bucket().retrieve_relevant_trio(user_query)
+
     system_prompt = build_system_prompt(
         allowed_brands=state.get("allowed_brands"),
     )
     user_prompt = build_user_prompt(
-        user_query=state.get("user_query", ""),
+        user_query=user_query,
         error_feedback=state.get("error_feedback"),
         previous_sql=state.get("current_sql"),
+        golden_trio=golden_trio,
     )
 
     if client is not None:
@@ -102,4 +107,5 @@ def generate_sql(
         "sql_history": [*state.get("sql_history", []), sanitized_sql],
         "total_llm_calls": state.get("total_llm_calls", 0) + 1,
         "tokens_consumed": state.get("tokens_consumed", 0) + tokens,
+        "retrieved_trio_id": golden_trio.id if golden_trio else None,
     }

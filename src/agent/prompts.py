@@ -5,6 +5,7 @@ to bridge the semantic gap between executive intent and BigQuery GoogleSQL.
 """
 
 import re
+from typing import Any
 
 from src.bq.schema import DEFAULT_DATASET, SchemaInspector
 
@@ -32,6 +33,13 @@ RETAIL_ONTOLOGY_RULES = """
 
 5. **Return Rate Percentage:**
    - Formula: `SAFE_DIVIDE(COUNTIF(status = 'Returned'), COUNTIF(status IN ('Complete', 'Shipped', 'Returned'))) * 100`.
+
+6. **State & Geographical Filters:**
+   - In `users.state`, values are stored as standard 2-letter uppercase postal abbreviations (e.g. 'CA' for California, 'NY' for New York, 'TX' for Texas, 'FL' for Florida).
+   - Always use the 2-letter abbreviation in SQL WHERE clauses (e.g., `state IN ('CA', 'NY')` when asked for California or New York).
+
+7. **Traffic Sources & User Attribution:**
+   - In `users.traffic_source`, valid values are typically: 'Search', 'Organic', 'Facebook', 'Email', 'Display'.
 """
 
 # Golden Bucket Trios (Exemplars for in-context few-shot learning)
@@ -155,9 +163,18 @@ def build_user_prompt(
     user_query: str,
     error_feedback: str | None = None,
     previous_sql: str | None = None,
+    golden_trio: Any | None = None,
 ) -> str:
-    """Construct the user prompt with query context and optional self-correction feedback."""
+    """Construct the user prompt with query context, optional golden trio, and self-correction feedback."""
     prompt_parts = [f"Executive Request: {user_query}"]
+
+    if golden_trio:
+        prompt_parts.append("\n---")
+        prompt_parts.append("### Relevant Historical Reference (Golden Knowledge Trio):")
+        prompt_parts.append(f"Analyst Domain: {golden_trio.business_domain}")
+        prompt_parts.append(f"Historical Question: \"{golden_trio.question}\"")
+        prompt_parts.append(f"Canonical Reference GoogleSQL:\n```sql\n{golden_trio.sql_query}\n```")
+        prompt_parts.append("Analyst Context Excerpt:\n" + golden_trio.executive_briefing.strip()[:400] + "...")
 
     if error_feedback and previous_sql:
         prompt_parts.append("\n---")

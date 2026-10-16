@@ -93,7 +93,7 @@ class BigQueryClient:
     def __init__(
         self,
         project_id: str | None = None,
-        dataset_id: str = DEFAULT_DATASET,
+        dataset_id: str | None = DEFAULT_DATASET,
         client: bigquery.Client | None = None,
     ) -> None:
         """Initialize the BigQuery client.
@@ -102,7 +102,7 @@ class BigQueryClient:
             CredentialsMissingError: If Google Cloud ADC cannot be discovered,
                                      allowing seamless fallback to DuckDB.
         """
-        self.dataset_id = dataset_id.strip("`")
+        self.dataset_id = (dataset_id or DEFAULT_DATASET).strip("`")
         self.project_id = project_id
 
         if client is not None:
@@ -222,3 +222,24 @@ def get_bigquery_client(
             "[yellow]➡️ Gracefully falling back to in-memory DuckDB engine with synthetic thelook_ecommerce data.[/yellow]"
         )
         return MockDuckDBEngine(dataset_id=dataset_id)
+
+
+class BigQueryRunner(BigQueryClient):
+    """Alex Freidman reference client alias for executing BigQuery queries on thelook_ecommerce.
+
+    Provides 100% signature compatibility with Page 4 of the assignment specification.
+    """
+
+    def __init__(
+        self,
+        project_id: str | None = None,
+        dataset_id: str | None = DEFAULT_DATASET,
+        client: bigquery.Client | None = None,
+    ) -> None:
+        """Initialize BigQuery runner, normalizing optional dataset_id."""
+        super().__init__(
+            project_id=project_id,
+            dataset_id=dataset_id or DEFAULT_DATASET,
+            client=client,
+        )
+

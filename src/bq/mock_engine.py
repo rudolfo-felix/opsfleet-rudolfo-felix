@@ -91,6 +91,18 @@ def translate_googlesql_to_duckdb(sql: str) -> str:
 
     translated = sql
 
+    # 0. Information schema catalog queries: `bigquery-public-data.thelook_ecommerce.INFORMATION_SCHEMA.COLUMNS` -> `information_schema.columns`
+    translated = re.sub(
+        r"(?i)`?(?:bigquery-public-data\.)?thelook_ecommerce\.INFORMATION_SCHEMA\.([a-zA-Z0-9_]+)`?",
+        r"information_schema.\1",
+        translated,
+    )
+    translated = re.sub(
+        r"(?i)\btable_schema\s*=\s*['\"]thelook_ecommerce['\"]",
+        "table_schema IN ('main', 'thelook_ecommerce')",
+        translated,
+    )
+
     # 1. Strip dataset qualifications: `bigquery-public-data.thelook_ecommerce.table` -> `table`
     translated = re.sub(
         r"(?i)`?(?:bigquery-public-data\.)?thelook_ecommerce\.([a-zA-Z0-9_]+)`?",
@@ -360,6 +372,13 @@ def generate_synthetic_data() -> dict[str, pd.DataFrame]:
         if item_id > 110:
             break
 
+    # Ensure product 1 and product 2 have order items for benchmark comparison fidelity with correct prices
+    if len(order_item_rows) >= 2:
+        for idx, target_pid in enumerate([1, 2]):
+            p_price = float(df_products.loc[df_products["id"] == target_pid, "retail_price"].values[0])
+            order_item_rows[idx]["product_id"] = target_pid
+            order_item_rows[idx]["sale_price"] = round(p_price, 2)
+
     df_order_items = pd.DataFrame(order_item_rows)
 
     return {
@@ -388,6 +407,11 @@ class MockDuckDBEngine:
             self.con.execute(f"CREATE TABLE {table_name} AS SELECT * FROM temp_{table_name}_df")
             self.con.unregister(f"temp_{table_name}_df")
             logger.debug(f"Seeded DuckDB table '{table_name}' with {len(df)} rows.")
+
+        # Seed placeholder schemas for remaining 3 thelook_ecommerce tables for catalog discovery parity
+        self.con.execute("CREATE TABLE IF NOT EXISTS events (id INT, user_id INT, sequence_number INT, session_id VARCHAR, created_at TIMESTAMP, ip_address VARCHAR, city VARCHAR, state VARCHAR, postal_code VARCHAR, browser VARCHAR, traffic_source VARCHAR, uri VARCHAR, event_type VARCHAR)")
+        self.con.execute("CREATE TABLE IF NOT EXISTS inventory_items (id INT, product_id INT, created_at TIMESTAMP, sold_at TIMESTAMP, cost DOUBLE, product_category VARCHAR, product_name VARCHAR, product_brand VARCHAR, product_retail_price DOUBLE, product_department VARCHAR, product_sku VARCHAR, product_distribution_center_id INT)")
+        self.con.execute("CREATE TABLE IF NOT EXISTS distribution_centers (id INT, name VARCHAR, latitude DOUBLE, longitude DOUBLE)")
 
     def execute_query(self, sql: str, sanitize: bool = True) -> duckdb.DuckDBPyRelation:
         """Execute translated query against in-memory DuckDB."""

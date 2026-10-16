@@ -56,6 +56,9 @@ class AgentState(TypedDict, total=False):
     total_llm_calls: int
     tokens_consumed: int
 
+    # Hybrid Intelligence (Req 1: Golden Knowledge Bucket)
+    retrieved_trio_id: str | None
+
 
 def create_initial_state(
     user_query: str,
@@ -80,4 +83,5 @@ def create_initial_state(
         executive_report=None,
         total_llm_calls=0,
         tokens_consumed=0,
+        retrieved_trio_id=None,
     )
