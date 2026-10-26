@@ -22,6 +22,9 @@ from rich.table import Table
 console = Console()
 ROOT_DIR = Path(__file__).resolve().parent.parent
 
+# Guarantee hermetic evaluation without requiring external keys for verification
+os.environ.setdefault("GEMINI_API_KEY", "evaluator_test_key")
+
 
 @dataclass
 class BatteryResult:

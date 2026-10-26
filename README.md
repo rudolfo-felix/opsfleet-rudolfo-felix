@@ -43,7 +43,7 @@ export GEMINI_API_KEY="AIzaSy..."
 python main.py --mock-bq
 
 # Or launch against live Google Cloud BigQuery
-python main.py --dataset-id "bigquery-public-data.thelook_ecommerce"
+python main.py
 ```
 
 ---
@@ -103,13 +103,11 @@ The CLI entrypoint (`main.py`) provides exhaustive configuration options for rol
 
 | CLI Option | Default | Environment Variable | Description |
 |---|---|---|---|
-| `--user-id` | `sarah-ceo` | `AIRA_USER_ID` | Active session user identifier (e.g. `sarah-ceo`, `marcus-fashion-lead`). |
-| `--brands` | `None` | `AIRA_USER_BRANDS` | Comma-separated list of brand restrictions enforcing multi-tenant catalog scoping. |
-| `--model` | `gemini-2.5-flash` | `GEMINI_MODEL` | Gemini LLM model identifier (`gemini-2.5-flash` or `gemini-2.5-flash-lite`). |
-| `--dataset-id` | `thelook_ecommerce` | `BIGQUERY_DATASET_ID` | BigQuery dataset identifier for live data queries. |
-| `--mock-bq` | `False` | `USE_MOCK_BIGQUERY` | Force offline execution using in-memory DuckDB engine and synthetic fixtures. |
+| `--user-id` | `sarah_ceo` | N/A | Active session user persona identifier (e.g. `sarah_ceo`, `marcus_buyer`). |
+| `--brands` | `None` | N/A | Comma-separated list of brand restrictions enforcing multi-tenant catalog scoping. |
+| `--model` | `gemini-2.5-flash` | `MODEL_NAME` | Gemini LLM model identifier (`gemini-2.5-flash` or `gemini-2.5-flash-lite`). |
+| `--mock-bq` | `False` | `MOCK_BIGQUERY` | Force offline execution using in-memory DuckDB engine and synthetic fixtures. |
 | `--dry-run` | `False` | N/A | Execute pre-flight dependency & state graph verification and exit cleanly (code 0). |
-| `--debug` | `False` | `DEBUG` | Enable verbose debug logging across SQL execution and telemetry spans. |
 
 ---
 
